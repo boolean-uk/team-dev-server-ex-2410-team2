@@ -7,7 +7,6 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "prepare": "husky install",
     "db-reset": "prisma migrate reset"
   },
   "prisma": {
@@ -33,7 +32,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^5.1.0",
-    "husky": "^7.0.4",
     "nodemon": "^2.0.15",
     "prettier": "^2.6.2",
     "prisma": "^3.12.0"
