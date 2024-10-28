@@ -1,6 +1,7 @@
 import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
+/* CREATES A NEW USER */
 export const create = async (req, res) => {
   const userToCreate = await User.fromJson(req.body)
 
@@ -19,6 +20,7 @@ export const create = async (req, res) => {
   }
 }
 
+/* GETS A USER BY ID */
 export const getById = async (req, res) => {
   const id = parseInt(req.params.id)
 
@@ -35,6 +37,7 @@ export const getById = async (req, res) => {
   }
 }
 
+/* GETS ALL USERS */
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
   const { first_name: firstName } = req.query
@@ -55,6 +58,7 @@ export const getAll = async (req, res) => {
 
   return sendDataResponse(res, 200, { users: formattedUsers })
 }
+/* Updates a user by ID */
 
 export const updateById = async (req, res) => {
   const { cohort_id: cohortId } = req.body
@@ -65,3 +69,5 @@ export const updateById = async (req, res) => {
 
   return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
 }
+
+/* Test Commit statement */
