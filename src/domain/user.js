@@ -7,7 +7,7 @@ export default class User {
    * take as inputs, what types they return, and other useful information that JS doesn't have built in
    * @tutorial https://www.valentinog.com/blog/jsdoc
    *
-   * @param { { id: int, cohortId: int, email: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string } } } user
+   * @param { { id: int, cohortId: int, email: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string, username:string, mobile } } } user
    * @returns {User}
    */
   static fromDb(user) {
@@ -19,6 +19,11 @@ export default class User {
       user.email,
       user.profile?.bio,
       user.profile?.githubUrl,
+      user.profile?.username,
+      user.profile?.mobile,
+      user.profile?.specialism,
+      user.profile?.startDate,
+      user.profile?.endDate,
       user.password,
       user.role
     )
@@ -26,7 +31,19 @@ export default class User {
 
   static async fromJson(json) {
     // eslint-disable-next-line camelcase
-    const { firstName, lastName, email, biography, githubUrl, password } = json
+    const {
+      firstName,
+      lastName,
+      email,
+      bio,
+      githubUrl,
+      username,
+      mobile,
+      specialism,
+      startDate,
+      endDate,
+      password
+    } = json
 
     const passwordHash = await bcrypt.hash(password, 8)
 
@@ -36,8 +53,13 @@ export default class User {
       firstName,
       lastName,
       email,
-      biography,
+      bio,
       githubUrl,
+      username,
+      mobile,
+      specialism,
+      startDate,
+      endDate,
       passwordHash
     )
   }
@@ -50,6 +72,11 @@ export default class User {
     email,
     bio,
     githubUrl,
+    username,
+    mobile,
+    specialism,
+    startDate,
+    endDate,
     passwordHash = null,
     role = 'STUDENT'
   ) {
@@ -60,6 +87,11 @@ export default class User {
     this.email = email
     this.bio = bio
     this.githubUrl = githubUrl
+    this.username = username
+    this.mobile = mobile
+    this.specialism = specialism
+    this.startDate = startDate
+    this.endDate = endDate
     this.passwordHash = passwordHash
     this.role = role
   }
@@ -73,8 +105,13 @@ export default class User {
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
-        biography: this.bio,
-        githubUrl: this.githubUrl
+        bio: this.bio,
+        githubUrl: this.githubUrl,
+        username: this.username,
+        mobile: this.mobile,
+        specialism: this.specialism,
+        startDate: this.startDate,
+        endDate: this.endDate
       }
     }
   }
@@ -104,7 +141,12 @@ export default class User {
           firstName: this.firstName,
           lastName: this.lastName,
           bio: this.bio,
-          githubUrl: this.githubUrl
+          githubUrl: this.githubUrl,
+          username: this.username,
+          mobile: this.mobile,
+          specialism: this.specialism,
+          startDate: this.startDate,
+          endDate: this.endDate
         }
       }
     }
