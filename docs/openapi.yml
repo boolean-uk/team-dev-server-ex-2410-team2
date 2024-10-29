@@ -2,10 +2,10 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: "1.0"
+  version: '1.0'
 
 servers:
-  - url: "http://localhost:4000/"
+  - url: 'http://localhost:4000/'
 tags:
   - name: user
   - name: post
@@ -729,7 +729,7 @@ components:
                   format: date-time
                 profileImage:
                   type: string
-                  
+
     Error:
       type: object
       properties:
