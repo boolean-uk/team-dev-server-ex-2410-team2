@@ -1,11 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
-import {
-  createPost,
-  getAllPosts,
-  getPostById,
-  updateContentById,
-  deletePostById
-} from '../domain/post.js'
+import Post from '../domain/post.js'
 import User from '../domain/user.js'
 
 export const create = async (req, res) => {
@@ -17,7 +11,7 @@ export const create = async (req, res) => {
   }
 
   try {
-    const post = await createPost(content, user)
+    const post = await Post.createPost(content, user)
     if (post) {
       return sendDataResponse(res, 201, { post })
     } else {
@@ -29,7 +23,7 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  const posts = await getAllPosts()
+  const posts = await Post.getAllPosts()
   if (!posts) {
     return sendDataResponse(res, 500, {
       content: 'Internal server error'
@@ -40,7 +34,7 @@ export const getAll = async (req, res) => {
 
 export const getById = async (req, res) => {
   const { id } = req.params
-  const post = await getPostById(Number(id))
+  const post = await Post.getPostById(Number(id))
 
   if (!post) {
     return sendDataResponse(res, 404, {
@@ -56,9 +50,9 @@ export const updateById = async (req, res) => {
   const { content } = req.body
 
   try {
-    const post = await getPostById(Number(id))
+    const post = await Post.getPostById(Number(id))
     if (post) {
-      const updatedPost = await updateContentById(Number(id), content)
+      const updatedPost = await Post.updateContentById(Number(id), content)
       return sendDataResponse(res, 200, { post: updatedPost })
     } else {
       return sendDataResponse(res, 404, {
@@ -76,9 +70,9 @@ export const deleteById = async (req, res) => {
   const { id } = req.params
 
   try {
-    const post = await getPostById(Number(id))
+    const post = await Post.getPostById(Number(id))
     if (post) {
-      const deletedPost = await deletePostById(Number(id))
+      const deletedPost = await Post.deletePostById(Number(id))
       return sendDataResponse(res, 200, { post: deletedPost })
     } else {
       return sendDataResponse(res, 404, {
