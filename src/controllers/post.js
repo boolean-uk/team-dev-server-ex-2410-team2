@@ -26,3 +26,14 @@ export const getAll = async (req, res) => {
     ]
   })
 }
+
+export const updateById = async (req, res) => {
+  const { content } = req.body
+  const { id } = req.params
+
+  if (!content) {
+    return sendDataResponse(res, 400, { content: 'Must provide content' })
+  }
+
+  return sendDataResponse(res, 200, { post: { id, content } })
+}
