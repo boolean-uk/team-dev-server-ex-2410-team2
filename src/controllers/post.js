@@ -1,4 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
+import { getPostById, updateContentById } from '../domain/post.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -25,4 +26,25 @@ export const getAll = async (req, res) => {
       }
     ]
   })
+}
+
+export const updateById = async (req, res) => {
+  const { id } = req.params
+  const { content } = req.body
+
+  try {
+    const post = await getPostById(Number(id))
+    if (post) {
+      const updatedPost = await updateContentById(Number(id), content)
+      return sendDataResponse(res, 200, { post: updatedPost })
+    } else {
+      return sendDataResponse(res, 404, {
+        content: `Post with id ${id} not found`
+      })
+    }
+  } catch (error) {
+    return sendDataResponse(res, 500, {
+      content: 'Internal server error'
+    })
+  }
 }
