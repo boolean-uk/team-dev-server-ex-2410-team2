@@ -61,13 +61,27 @@ export const getAll = async (req, res) => {
 /* Updates a user by ID */
 
 export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
+  const id = parseInt(req.params.id)
+  const userToUpdate = await User.fromJson(req.body)
 
-  if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+  // Add id, cohortId and role (could be done in the domain)
+  userToUpdate.id = id
+  userToUpdate.cohortId = req.body.cohortId
+  userToUpdate.role = req.body.role
+
+  console.log(userToUpdate)
+
+  try {
+    if (!userToUpdate.cohortId) {
+      return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+    }
+    const updatedUser = await userToUpdate.update()
+
+    return sendDataResponse(res, 201, updatedUser)
+  } catch (error) {
+    console.log(error)
+    return sendMessageResponse(res, 500, 'Unable to update user')
   }
-
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
 }
 
 /* Test Commit statement */

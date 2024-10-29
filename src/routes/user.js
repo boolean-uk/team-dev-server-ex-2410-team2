@@ -2,7 +2,8 @@ import { Router } from 'express'
 import { create, getById, getAll, updateById } from '../controllers/user.js'
 import {
   validateAuthentication,
-  validateTeacherRole
+  validateTeacherRole,
+  validateLoggedInUser
 } from '../middleware/auth.js'
 import { validateUser } from '../middleware/user.js'
 
@@ -15,6 +16,7 @@ router.patch(
   '/:id',
   validateAuthentication,
   validateUser,
+  validateLoggedInUser,
   validateTeacherRole,
   updateById
 )

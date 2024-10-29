@@ -7,7 +7,7 @@ export default class User {
    * take as inputs, what types they return, and other useful information that JS doesn't have built in
    * @tutorial https://www.valentinog.com/blog/jsdoc
    *
-   * @param { { id: int, cohortId: int, email: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string, username:string, mobile } } } user
+   * @param { { id: int, cohortId: int, email: string, role: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string, username:string, mobile } } } user
    * @returns {User}
    */
   static fromDb(user) {
@@ -158,6 +158,42 @@ export default class User {
     })
 
     return User.fromDb(createdUser)
+  }
+
+  /**
+   * @returns {User}
+   *  A user instance containing the updated user data
+   */
+  async update() {
+    const updatedUser = await dbClient.user.update({
+      where: {
+        id: this.id
+      },
+      data: {
+        email: this.email,
+        password: this.passwordHash,
+        role: this.role,
+        cohortId: this.cohortId,
+        profile: {
+          update: {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            bio: this.bio,
+            githubUrl: this.githubUrl,
+            username: this.username,
+            mobile: this.mobile,
+            specialism: this.specialism,
+            startDate: this.startDate,
+            endDate: this.endDate
+          }
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+
+    return User.fromDb(updatedUser)
   }
 
   static async findByEmail(email) {
