@@ -191,6 +191,8 @@ paths:
               properties:
                 content:
                   type: string
+                userid:
+                  type: integer
       responses:
         201:
           description: success

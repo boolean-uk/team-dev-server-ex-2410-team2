@@ -1,19 +1,31 @@
 import { sendDataResponse } from '../utils/responses.js'
 import {
+  createPost,
   getAllPosts,
   getPostById,
   updateContentById,
   deletePostById
 } from '../domain/post.js'
+import User from '../domain/user.js'
 
 export const create = async (req, res) => {
-  const { content } = req.body
+  const { content, userid } = req.body
+  const user = await User.findById(userid)
 
   if (!content) {
     return sendDataResponse(res, 400, { content: 'Must provide content' })
   }
 
-  return sendDataResponse(res, 201, { post: { id: 1, content } })
+  try {
+    const post = await createPost(content, user)
+    if (post) {
+      return sendDataResponse(res, 201, { post })
+    } else {
+      return sendDataResponse(res, 500, { content: 'Failed to create post' })
+    }
+  } catch (error) {
+    return sendDataResponse(res, 500, { content: 'Internal server error' })
+  }
 }
 
 export const getAll = async (req, res) => {

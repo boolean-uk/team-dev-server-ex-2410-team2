@@ -14,6 +14,18 @@ export class Post {
   }
 }
 
+export async function createPost(content, user) {
+  try {
+    const post = await dbClient.post.create({
+      data: { content: content, userId: user.id }
+    })
+    return post
+  } catch (error) {
+    console.error('Error creating post:', error)
+    return null
+  }
+}
+
 export async function getAllPosts() {
   try {
     const posts = await dbClient.post.findMany()
