@@ -1,5 +1,5 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { getPostById, updateContentById } from '../domain/post.js'
+import { getAllPosts, getPostById, updateContentById } from '../domain/post.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -12,20 +12,13 @@ export const create = async (req, res) => {
 }
 
 export const getAll = async (req, res) => {
-  return sendDataResponse(res, 200, {
-    posts: [
-      {
-        id: 1,
-        content: 'Hello world!',
-        author: { ...req.user }
-      },
-      {
-        id: 2,
-        content: 'Hello from the void!',
-        author: { ...req.user }
-      }
-    ]
-  })
+  const posts = await getAllPosts()
+  if (!posts) {
+    return sendDataResponse(res, 500, {
+      content: 'Internal server error'
+    })
+  }
+  return sendDataResponse(res, 200, { posts })
 }
 
 export const updateById = async (req, res) => {

@@ -14,6 +14,16 @@ export class Post {
   }
 }
 
+export async function getAllPosts() {
+  try {
+    const posts = await dbClient.post.findMany()
+    return posts
+  } catch (error) {
+    console.error('Error fetching all posts:', error)
+    return null
+  }
+}
+
 export async function getPostById(id) {
   try {
     const post = await dbClient.post.findUnique({
