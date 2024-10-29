@@ -1,10 +1,34 @@
 import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
-export const create = async (req, res) => {
-  const userToCreate = await User.fromJson(req.body)
+const validatePassword = (password) => {
+  const minLength = 8
+  const hasUpperCase = /[A-Z]/.test(password)
+  const hasNumber = /\d/.test(password)
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
 
-  // Add password validation
+  if (password.length < minLength) {
+    return 'Password must be at least 8 characters long'
+  }
+  if (!hasUpperCase) {
+    return 'Password must contain at least one uppercase letter'
+  }
+  if (!hasNumber) {
+    return 'Password must contain at least one number'
+  }
+  if (!hasSpecialChar) {
+    return 'Password must contain at least one special character'
+  }
+  return null
+}
+
+export const create = async (req, res) => {
+  const passwordError = validatePassword(req.body.password)
+  if (passwordError) {
+    return sendDataResponse(res, 400, { password: passwordError })
+  }
+
+  const userToCreate = await User.fromJson(req.body)
 
   try {
     const existingUser = await User.findByEmail(userToCreate.email)
