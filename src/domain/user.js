@@ -179,7 +179,12 @@ export default class User {
             firstName: this.firstName,
             lastName: this.lastName,
             bio: this.bio,
-            githubUrl: this.githubUrl
+            githubUrl: this.githubUrl,
+            username: this.username,
+            mobile: this.mobile,
+            specialism: this.specialism,
+            startDate: this.startDate,
+            endDate: this.endDate
           }
         }
       },
