@@ -57,11 +57,34 @@ export const getAll = async (req, res) => {
 }
 
 export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
+  const id = parseInt(req.params.id)
+  const userToUpdate = await User.fromJson(req.body)
+  userToUpdate.id = id
 
-  if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+  // Update cohortId and role to userToUpdate (only if logged in role is Teacher)
+  // otherwise, keep the existing values of the user
+  if (req.user.role === 'TEACHER') {
+    userToUpdate.cohortId = parseInt(req.body.cohortId)
+    const roleId = parseInt(req.body.role)
+    if (roleId === 1) {
+      userToUpdate.role = 'STUDENT'
+    } else if (roleId === 2) {
+      userToUpdate.role = 'TEACHER'
+    }
+  } else {
+    const existingUser = await User.findById(id)
+    userToUpdate.cohortId = existingUser.cohortId
+    userToUpdate.role = existingUser.role
   }
 
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
+  try {
+    if (!userToUpdate.cohortId) {
+      return sendDataResponse(res, 400, { cohort_id: userToUpdate })
+    }
+    const updatedUser = await userToUpdate.update()
+
+    return sendDataResponse(res, 201, updatedUser)
+  } catch (error) {
+    return sendMessageResponse(res, 500, 'Unable to update user')
+  }
 }
