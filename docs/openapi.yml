@@ -32,6 +32,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreatedUser'
+        '400':
+          description: Invalid email/password supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - user
@@ -85,10 +91,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/loginRes'
-
         '400':
           description: Invalid username/password supplied
-
   /users/{id}:
     get:
       tags:
@@ -117,7 +121,6 @@ paths:
                     type: string
                   data:
                     $ref: '#/components/schemas/User'
-
         '400':
           description: fail
           content:
@@ -160,6 +163,12 @@ paths:
                 $ref: '#/components/schemas/CreatedUser'
         '401':
           description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid email/password supplied
           content:
             application/json:
               schema:
@@ -314,10 +323,10 @@ components:
           type: integer
         createdAt:
           type: string
-          format: string
+          format: date-time
         updatedAt:
           type: string
-          format: string
+          format: date-time
 
     AllUsers:
       type: object
@@ -351,6 +360,18 @@ components:
           type: string
         githubUrl:
           type: string
+        username:
+          type: string
+        mobile:
+          type: string
+        specialism:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
 
     CreateUser:
       type: object
@@ -365,6 +386,18 @@ components:
           type: string
         githubUrl:
           type: string
+        username:
+          type: string
+        mobile:
+          type: string
+        specialism:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
         password:
           type: string
 
@@ -387,6 +420,18 @@ components:
           type: string
         githubUrl:
           type: string
+        username:
+          type: string
+        mobile:
+          type: string
+        specialism:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
 
     Posts:
       type: object
@@ -407,10 +452,10 @@ components:
                     type: string
                   createdAt:
                     type: string
-                    format: string
+                    format: date-time
                   updatedAt:
                     type: string
-                    format: string
+                    format: date-time
                   author:
                     type: object
                     properties:
@@ -428,9 +473,21 @@ components:
                         type: string
                       githubUrl:
                         type: string
+                      username:
+                        type: string
+                      mobile:
+                        type: string
+                      specialism:
+                        type: string
+                      startDate:
+                        type: string
+                        format: date-time
+                      endDate:
+                        type: string
+                        format: date-time
                       profileImageUrl:
                         type: string
-    
+
     CreatedUser:
       type: object
       properties:
@@ -457,6 +514,19 @@ components:
                   type: string
                 githubUrl:
                   type: string
+                username:
+                  type: string
+                mobile:
+                  type: string
+                specialism:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+
     login:
       type: object
       properties:
@@ -492,6 +562,19 @@ components:
                   type: string
                 githubUrl:
                   type: string
+                username:
+                  type: string
+                mobile:
+                  type: string
+                specialism:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+
     Error:
       type: object
       properties:

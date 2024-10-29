@@ -5,15 +5,17 @@ import {
   validateTeacherRole,
   validateLoggedInUser
 } from '../middleware/auth.js'
+import { validateUser } from '../middleware/user.js'
 
 const router = Router()
 
-router.post('/', create)
+router.post('/', validateUser, create)
 router.get('/', validateAuthentication, getAll)
 router.get('/:id', validateAuthentication, getById)
 router.patch(
   '/:id',
   validateAuthentication,
+  validateUser,
   validateLoggedInUser,
   validateTeacherRole,
   updateById
