@@ -59,18 +59,11 @@ export const getAll = async (req, res) => {
 export const updateById = async (req, res) => {
   const id = parseInt(req.params.id)
   const userToUpdate = await User.fromJson(req.body)
-  userToUpdate.id = id
 
-  // Update cohortId and role to userToUpdate (only if logged in role is Teacher)
-  // otherwise, keep the existing values of the user
-  if (req.user.role === 'TEACHER') {
-    userToUpdate.cohortId = parseInt(req.body.cohortId)
-    userToUpdate.role = req.body.role
-  } else {
-    const existingUser = await User.findById(id)
-    userToUpdate.cohortId = existingUser.cohortId
-    userToUpdate.role = existingUser.role
-  }
+  // Add id, cohortId and role (could be done in the domain)
+  userToUpdate.id = id
+  userToUpdate.cohortId = req.body.cohortId
+  userToUpdate.role = req.body.role
 
   try {
     if (!userToUpdate.cohortId) {

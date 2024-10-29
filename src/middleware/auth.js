@@ -27,11 +27,19 @@ export async function validateLoggedInUser(req, res, next) {
     return sendMessageResponse(res, 500, 'Unable to verify user')
   }
 
-  if (req.user.id !== parseInt(req.params.id)) {
-    return next()
+  if (req.user.id === parseInt(req.params.id)) {
+    // Skip teacher validation if the user is updating their own profile
+    res.locals.skipTeacherValidation = true
+
+    // Overwrite the request body with pre-existing values for cohortId and role,
+    // if the logged in user is a STUDENT
+    if (req.user.role === 'STUDENT') {
+      const existingUser = await User.findById(parseInt(req.params.id))
+      req.body.cohortId = existingUser.cohortId
+      req.body.role = existingUser.role
+    }
   }
 
-  res.locals.skipTeacherValidation = true
   next()
 }
 
