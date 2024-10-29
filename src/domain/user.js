@@ -7,10 +7,11 @@ export default class User {
    * take as inputs, what types they return, and other useful information that JS doesn't have built in
    * @tutorial https://www.valentinog.com/blog/jsdoc
    *
-   * @param { { id: int, cohortId: int, email: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string } } } user
+   * @param { { id: int, cohortId: int, email: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string, profileImage: string } } } user
    * @returns {User}
    */
   static fromDb(user) {
+    console.log(user)
     return new User(
       user.id,
       user.cohortId,
@@ -20,13 +21,22 @@ export default class User {
       user.profile?.bio,
       user.profile?.githubUrl,
       user.password,
+      user.profile?.profileImage,
       user.role
     )
   }
 
   static async fromJson(json) {
     // eslint-disable-next-line camelcase
-    const { firstName, lastName, email, biography, githubUrl, password } = json
+    const {
+      firstName,
+      lastName,
+      email,
+      biography,
+      githubUrl,
+      password,
+      profileImage
+    } = json
 
     const passwordHash = await bcrypt.hash(password, 8)
 
@@ -38,7 +48,8 @@ export default class User {
       email,
       biography,
       githubUrl,
-      passwordHash
+      passwordHash,
+      profileImage
     )
   }
 
@@ -51,6 +62,7 @@ export default class User {
     bio,
     githubUrl,
     passwordHash = null,
+    profileImage = null,
     role = 'STUDENT'
   ) {
     this.id = id
@@ -62,9 +74,11 @@ export default class User {
     this.githubUrl = githubUrl
     this.passwordHash = passwordHash
     this.role = role
+    this.profileImage = profileImage
   }
 
   toJSON() {
+    console.log(this)
     return {
       user: {
         id: this.id,
@@ -74,7 +88,8 @@ export default class User {
         lastName: this.lastName,
         email: this.email,
         biography: this.bio,
-        githubUrl: this.githubUrl
+        githubUrl: this.githubUrl,
+        profileImage: this.profileImage
       }
     }
   }
@@ -104,7 +119,8 @@ export default class User {
           firstName: this.firstName,
           lastName: this.lastName,
           bio: this.bio,
-          githubUrl: this.githubUrl
+          githubUrl: this.githubUrl,
+          profileImage: this.profileImage
         }
       }
     }
