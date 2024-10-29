@@ -65,12 +65,7 @@ export const updateById = async (req, res) => {
   // otherwise, keep the existing values of the user
   if (req.user.role === 'TEACHER') {
     userToUpdate.cohortId = parseInt(req.body.cohortId)
-    const roleId = parseInt(req.body.role)
-    if (roleId === 1) {
-      userToUpdate.role = 'STUDENT'
-    } else if (roleId === 2) {
-      userToUpdate.role = 'TEACHER'
-    }
+    userToUpdate.role = req.body.role
   } else {
     const existingUser = await User.findById(id)
     userToUpdate.cohortId = existingUser.cohortId
