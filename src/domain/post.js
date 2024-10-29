@@ -48,3 +48,15 @@ export async function updateContentById(id, content) {
     return null
   }
 }
+
+export async function deletePostById(id) {
+  try {
+    const post = await dbClient.post.delete({
+      where: { id: id }
+    })
+    return post
+  } catch (error) {
+    console.error('Error deleting post by ID:', error)
+    return null
+  }
+}

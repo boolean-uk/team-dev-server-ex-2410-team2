@@ -1,5 +1,10 @@
 import { sendDataResponse } from '../utils/responses.js'
-import { getAllPosts, getPostById, updateContentById } from '../domain/post.js'
+import {
+  getAllPosts,
+  getPostById,
+  updateContentById,
+  deletePostById
+} from '../domain/post.js'
 
 export const create = async (req, res) => {
   const { content } = req.body
@@ -43,6 +48,26 @@ export const updateById = async (req, res) => {
     if (post) {
       const updatedPost = await updateContentById(Number(id), content)
       return sendDataResponse(res, 200, { post: updatedPost })
+    } else {
+      return sendDataResponse(res, 404, {
+        content: `Post with id ${id} not found`
+      })
+    }
+  } catch (error) {
+    return sendDataResponse(res, 500, {
+      content: 'Internal server error'
+    })
+  }
+}
+
+export const deleteById = async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const post = await getPostById(Number(id))
+    if (post) {
+      const deletedPost = await deletePostById(Number(id))
+      return sendDataResponse(res, 200, { post: deletedPost })
     } else {
       return sendDataResponse(res, 404, {
         content: `Post with id ${id} not found`
