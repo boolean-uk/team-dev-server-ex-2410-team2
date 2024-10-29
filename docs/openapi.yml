@@ -2,10 +2,10 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: 1.0
+  version: "1.0"
 
 servers:
-  - url: http://localhost:4000/
+  - url: "http://localhost:4000/"
 tags:
   - name: user
   - name: post
@@ -351,6 +351,8 @@ components:
           type: string
         githubUrl:
           type: string
+        profileImage:
+          type: string
 
     CreateUser:
       type: object
@@ -366,6 +368,8 @@ components:
         githubUrl:
           type: string
         password:
+          type: string
+        profileImage:
           type: string
 
     UpdateUser:
@@ -386,6 +390,8 @@ components:
         bio:
           type: string
         githubUrl:
+          type: string
+        profileImage:
           type: string
 
     Posts:
@@ -428,7 +434,7 @@ components:
                         type: string
                       githubUrl:
                         type: string
-                      profileImageUrl:
+                      profileImage:
                         type: string
     
     CreatedUser:
@@ -456,6 +462,8 @@ components:
                 bio:
                   type: string
                 githubUrl:
+                  type: string
+                profileImage:
                   type: string
     login:
       type: object
@@ -491,6 +499,8 @@ components:
                 bio:
                   type: string
                 githubUrl:
+                  type: string
+                profileImage:
                   type: string
     Error:
       type: object
