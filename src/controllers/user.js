@@ -3,9 +3,9 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
 /* CREATES A NEW USER */
 export const create = async (req, res) => {
-  const userToCreate = await User.fromJson(req.body)
-
   try {
+    const userToCreate = await User.fromJson(req.body)
+
     const existingUser = await User.findByEmail(userToCreate.email)
 
     if (existingUser) {
@@ -16,10 +16,10 @@ export const create = async (req, res) => {
 
     return sendDataResponse(res, 201, createdUser)
   } catch (error) {
+    console.error('Error creating user:', error)
     return sendMessageResponse(res, 500, 'Unable to create new user')
   }
 }
-
 /* GETS A USER BY ID */
 export const getById = async (req, res) => {
   const id = parseInt(req.params.id)

@@ -12,7 +12,12 @@ async function seed() {
     'Joe',
     'Bloggs',
     'Hello, world!',
-    'student1'
+    'student1@github.com',
+    'student1',
+    '123-456-7890', // mobile
+    'Software Engineering', // specialism
+    new Date('2023-01-01'), // startDate
+    new Date('2023-12-31') // endDate
   )
   const teacher = await createUser(
     'teacher@test.com',
@@ -21,7 +26,12 @@ async function seed() {
     'Rick',
     'Sanchez',
     'Hello there!',
+    'teacher1@git.com',
     'teacher1',
+    '987-654-3210',
+    'Teaching',
+    new Date('2022-01-01'),
+    new Date('2022-12-31'),
     'TEACHER'
   )
 
@@ -58,14 +68,19 @@ async function createCohort() {
 }
 
 async function createUser(
-  email,
-  password,
-  cohortId,
   firstName,
   lastName,
+  email,
   bio,
   githubUrl,
-  role = 'STUDENT'
+  username,
+  mobile,
+  specialism,
+  startDate,
+  endDate,
+  password,
+  role = 'STUDENT',
+  cohortId = null
 ) {
   const user = await prisma.user.create({
     data: {
@@ -78,7 +93,12 @@ async function createUser(
           firstName,
           lastName,
           bio,
-          githubUrl
+          githubUrl,
+          username,
+          mobile,
+          specialism,
+          startDate: new Date(startDate),
+          endDate: new Date(endDate)
         }
       }
     },
