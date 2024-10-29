@@ -4,6 +4,9 @@ import jwt from 'jsonwebtoken'
 import User from '../domain/user.js'
 
 export async function validateTeacherRole(req, res, next) {
+  if (res.locals.skipTeacherValidation) {
+    return next()
+  }
   if (!req.user) {
     return sendMessageResponse(res, 500, 'Unable to verify user')
   }
@@ -14,6 +17,21 @@ export async function validateTeacherRole(req, res, next) {
     })
   }
 
+  next()
+}
+
+// Function that checks if the currently logged in user is the same
+// one that is being requested, if so, we skip the teacher validation
+export async function validateLoggedInUser(req, res, next) {
+  if (!req.user) {
+    return sendMessageResponse(res, 500, 'Unable to verify user')
+  }
+
+  if (req.user.id !== parseInt(req.params.id)) {
+    return next()
+  }
+
+  res.locals.skipTeacherValidation = true
   next()
 }
 

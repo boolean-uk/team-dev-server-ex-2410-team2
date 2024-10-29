@@ -79,12 +79,13 @@ export const updateById = async (req, res) => {
 
   try {
     if (!userToUpdate.cohortId) {
-      return sendDataResponse(res, 400, { cohort_id: userToUpdate })
+      return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
     }
     const updatedUser = await userToUpdate.update()
 
     return sendDataResponse(res, 201, updatedUser)
   } catch (error) {
+    console.log(error)
     return sendMessageResponse(res, 500, 'Unable to update user')
   }
 }
