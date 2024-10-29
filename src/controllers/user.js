@@ -1,49 +1,27 @@
 import User from '../domain/user.js'
+import { validateUser } from '../middleware/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
-const validatePassword = (password) => {
-  const minLength = 8
-  const hasUpperCase = /[A-Z]/.test(password)
-  const hasNumber = /\d/.test(password)
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+export const create = [
+  validateUser,
+  async (req, res) => {
+    const userToCreate = await User.fromJson(req.body)
 
-  if (password.length < minLength) {
-    return 'Password must be at least 8 characters long'
-  }
-  if (!hasUpperCase) {
-    return 'Password must contain at least one uppercase letter'
-  }
-  if (!hasNumber) {
-    return 'Password must contain at least one number'
-  }
-  if (!hasSpecialChar) {
-    return 'Password must contain at least one special character'
-  }
-  return null
-}
+    try {
+      const existingUser = await User.findByEmail(userToCreate.email)
 
-export const create = async (req, res) => {
-  const passwordError = validatePassword(req.body.password)
-  if (passwordError) {
-    return sendDataResponse(res, 400, { password: passwordError })
-  }
+      if (existingUser) {
+        return sendDataResponse(res, 400, { email: 'Email already in use' })
+      }
 
-  const userToCreate = await User.fromJson(req.body)
+      const createdUser = await userToCreate.save()
 
-  try {
-    const existingUser = await User.findByEmail(userToCreate.email)
-
-    if (existingUser) {
-      return sendDataResponse(res, 400, { email: 'Email already in use' })
+      return sendDataResponse(res, 201, createdUser)
+    } catch (error) {
+      return sendMessageResponse(res, 500, 'Unable to create new user')
     }
-
-    const createdUser = await userToCreate.save()
-
-    return sendDataResponse(res, 201, createdUser)
-  } catch (error) {
-    return sendMessageResponse(res, 500, 'Unable to create new user')
   }
-}
+]
 
 export const getById = async (req, res) => {
   const id = parseInt(req.params.id)
