@@ -21,6 +21,19 @@ export const getAll = async (req, res) => {
   return sendDataResponse(res, 200, { posts })
 }
 
+export const getById = async (req, res) => {
+  const { id } = req.params
+  const post = await getPostById(Number(id))
+
+  if (!post) {
+    return sendDataResponse(res, 404, {
+      content: `Post with id ${id} not found`
+    })
+  }
+
+  return sendDataResponse(res, 200, { post })
+}
+
 export const updateById = async (req, res) => {
   const { id } = req.params
   const { content } = req.body
