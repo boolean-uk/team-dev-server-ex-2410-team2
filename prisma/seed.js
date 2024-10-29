@@ -12,7 +12,9 @@ async function seed() {
     'Joe',
     'Bloggs',
     'Hello, world!',
-    'student1'
+    'student1',
+    null,
+    'STUDENT'
   )
   const teacher = await createUser(
     'teacher@test.com',
@@ -22,6 +24,7 @@ async function seed() {
     'Sanchez',
     'Hello there!',
     'teacher1',
+    null,
     'TEACHER'
   )
 
@@ -65,6 +68,7 @@ async function createUser(
   lastName,
   bio,
   githubUrl,
+  profileImage,
   role = 'STUDENT'
 ) {
   const user = await prisma.user.create({
@@ -78,7 +82,8 @@ async function createUser(
           firstName,
           lastName,
           bio,
-          githubUrl
+          githubUrl,
+          profileImage
         }
       }
     },

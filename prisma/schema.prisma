@@ -36,6 +36,7 @@ model Profile {
   lastName    String
   bio         String?
   githubUrl   String?
+  profileImage String?
 }
 
 model Cohort {
