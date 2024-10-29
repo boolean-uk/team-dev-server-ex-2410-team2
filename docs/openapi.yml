@@ -32,6 +32,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreatedUser'
+        '400':
+          description: Invalid email/password supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     get:
       tags:
         - user
@@ -160,6 +166,12 @@ paths:
                 $ref: '#/components/schemas/CreatedUser'
         '401':
           description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid email/password supplied
           content:
             application/json:
               schema:
@@ -430,7 +442,7 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
-    
+
     CreatedUser:
       type: object
       properties:
