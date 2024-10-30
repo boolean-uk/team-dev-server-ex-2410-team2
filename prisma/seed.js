@@ -17,6 +17,7 @@ async function seed() {
     'Software Engineering', // specialism
     new Date('2023-01-01'), // startDate
     new Date('2023-12-31'),
+    null,
     'STUDENT',
     'Testpassword1!'
   )
@@ -32,6 +33,7 @@ async function seed() {
     'Teaching',
     new Date('2022-01-01'),
     new Date('2022-12-31'),
+    null,
     'TEACHER',
     'Testpassword1!'
   )
