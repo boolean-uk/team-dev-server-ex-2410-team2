@@ -7,7 +7,7 @@ export default class User {
    * take as inputs, what types they return, and other useful information that JS doesn't have built in
    * @tutorial https://www.valentinog.com/blog/jsdoc
    *
-   * @param { { id: int, cohortId: int, email: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string, profileImage: string } } } user
+   * @param { { id: int, cohortId: int, email: string, role: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string, username:string, mobile, profileImage: string } } } user
    * @returns {User}
    */
   static fromDb(user) {
@@ -20,6 +20,11 @@ export default class User {
       user.email,
       user.profile?.bio,
       user.profile?.githubUrl,
+      user.profile?.username,
+      user.profile?.mobile,
+      user.profile?.specialism,
+      user.profile?.startDate,
+      user.profile?.endDate,
       user.password,
       user.profile?.profileImage,
       user.role
@@ -32,8 +37,13 @@ export default class User {
       firstName,
       lastName,
       email,
-      biography,
+      bio,
       githubUrl,
+      username,
+      mobile,
+      specialism,
+      startDate,
+      endDate,
       password,
       profileImage
     } = json
@@ -46,8 +56,13 @@ export default class User {
       firstName,
       lastName,
       email,
-      biography,
+      bio,
       githubUrl,
+      username,
+      mobile,
+      specialism,
+      startDate,
+      endDate,
       passwordHash,
       profileImage
     )
@@ -61,6 +76,11 @@ export default class User {
     email,
     bio,
     githubUrl,
+    username,
+    mobile,
+    specialism,
+    startDate,
+    endDate,
     passwordHash = null,
     profileImage = null,
     role = 'STUDENT'
@@ -72,6 +92,11 @@ export default class User {
     this.email = email
     this.bio = bio
     this.githubUrl = githubUrl
+    this.username = username
+    this.mobile = mobile
+    this.specialism = specialism
+    this.startDate = startDate
+    this.endDate = endDate
     this.passwordHash = passwordHash
     this.role = role
     this.profileImage = profileImage
@@ -87,9 +112,14 @@ export default class User {
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
-        biography: this.bio,
+        bio: this.bio,
         githubUrl: this.githubUrl,
-        profileImage: this.profileImage
+        profileImage: this.profileImage,
+        username: this.username,
+        mobile: this.mobile,
+        specialism: this.specialism,
+        startDate: this.startDate,
+        endDate: this.endDate
       }
     }
   }
@@ -120,7 +150,12 @@ export default class User {
           lastName: this.lastName,
           bio: this.bio,
           githubUrl: this.githubUrl,
-          profileImage: this.profileImage
+          profileImage: this.profileImage,
+          username: this.username,
+          mobile: this.mobile,
+          specialism: this.specialism,
+          startDate: this.startDate,
+          endDate: this.endDate
         }
       }
     }
@@ -132,6 +167,42 @@ export default class User {
     })
 
     return User.fromDb(createdUser)
+  }
+
+  /**
+   * @returns {User}
+   *  A user instance containing the updated user data
+   */
+  async update() {
+    const updatedUser = await dbClient.user.update({
+      where: {
+        id: this.id
+      },
+      data: {
+        email: this.email,
+        password: this.passwordHash,
+        role: this.role,
+        cohortId: this.cohortId,
+        profile: {
+          update: {
+            firstName: this.firstName,
+            lastName: this.lastName,
+            bio: this.bio,
+            githubUrl: this.githubUrl,
+            username: this.username,
+            mobile: this.mobile,
+            specialism: this.specialism,
+            startDate: this.startDate,
+            endDate: this.endDate
+          }
+        }
+      },
+      include: {
+        profile: true
+      }
+    })
+
+    return User.fromDb(updatedUser)
   }
 
   static async findByEmail(email) {
