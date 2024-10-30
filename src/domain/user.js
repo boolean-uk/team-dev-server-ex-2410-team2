@@ -34,6 +34,7 @@ export default class User {
   static async fromJson(json) {
     // eslint-disable-next-line camelcase
     const {
+      cohortId,
       firstName,
       lastName,
       email,
@@ -52,7 +53,7 @@ export default class User {
 
     return new User(
       null,
-      null,
+      cohortId,
       firstName,
       lastName,
       email,
