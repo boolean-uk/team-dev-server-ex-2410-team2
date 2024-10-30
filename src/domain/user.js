@@ -7,10 +7,11 @@ export default class User {
    * take as inputs, what types they return, and other useful information that JS doesn't have built in
    * @tutorial https://www.valentinog.com/blog/jsdoc
    *
-   * @param { { id: int, cohortId: int, email: string, role: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string, username:string, mobile } } } user
+   * @param { { id: int, cohortId: int, email: string, role: string, profile: { firstName: string, lastName: string, bio: string, githubUrl: string, username:string, mobile, profileImage: string } } } user
    * @returns {User}
    */
   static fromDb(user) {
+    console.log(user)
     return new User(
       user.id,
       user.cohortId,
@@ -25,6 +26,7 @@ export default class User {
       user.profile?.startDate,
       user.profile?.endDate,
       user.password,
+      user.profile?.profileImage,
       user.role
     )
   }
@@ -42,7 +44,8 @@ export default class User {
       specialism,
       startDate,
       endDate,
-      password
+      password,
+      profileImage
     } = json
 
     const passwordHash = await bcrypt.hash(password, 8)
@@ -60,7 +63,8 @@ export default class User {
       specialism,
       startDate,
       endDate,
-      passwordHash
+      passwordHash,
+      profileImage
     )
   }
 
@@ -78,6 +82,7 @@ export default class User {
     startDate,
     endDate,
     passwordHash = null,
+    profileImage = null,
     role = 'STUDENT'
   ) {
     this.id = id
@@ -94,9 +99,11 @@ export default class User {
     this.endDate = endDate
     this.passwordHash = passwordHash
     this.role = role
+    this.profileImage = profileImage
   }
 
   toJSON() {
+    console.log(this)
     return {
       user: {
         id: this.id,
@@ -107,6 +114,7 @@ export default class User {
         email: this.email,
         bio: this.bio,
         githubUrl: this.githubUrl,
+        profileImage: this.profileImage,
         username: this.username,
         mobile: this.mobile,
         specialism: this.specialism,
@@ -142,6 +150,7 @@ export default class User {
           lastName: this.lastName,
           bio: this.bio,
           githubUrl: this.githubUrl,
+          profileImage: this.profileImage,
           username: this.username,
           mobile: this.mobile,
           specialism: this.specialism,

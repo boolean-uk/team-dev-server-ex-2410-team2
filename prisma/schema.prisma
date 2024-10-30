@@ -41,6 +41,7 @@ model Profile {
   specialism  String    @default("")
   startDate   DateTime  @default(now())
   endDate     DateTime?
+  profileImage String?
 }
 
 model Cohort {
