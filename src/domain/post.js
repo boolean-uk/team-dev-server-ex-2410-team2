@@ -22,16 +22,51 @@ export default class Post {
   }
 
   static async getAllPosts() {
-    return dbClient.post.findMany()
+    return dbClient.post.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            role: true,
+            cohortId: true,
+            profile: {
+              select: {
+                firstName: true,
+                lastName: true,
+                specialism: true
+              }
+            }
+          }
+        }
+      }
+    })
   }
 
   static async getPostById(id) {
     return dbClient.post.findUnique({
       where: {
         id: id
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            role: true,
+            cohortId: true,
+            profile: {
+              select: {
+                firstName: true,
+                lastName: true,
+                specialism: true
+              }
+            }
+          }
+        }
       }
     })
   }
+
+  // firstName lastName rolle specialism
 
   static async updateContentById(id, content) {
     return dbClient.post.update({
