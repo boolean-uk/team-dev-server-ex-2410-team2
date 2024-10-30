@@ -70,7 +70,7 @@ export default class User {
 
   constructor(
     id,
-    cohortId,
+    cohortId = 1,
     firstName,
     lastName,
     email,
@@ -79,8 +79,8 @@ export default class User {
     username,
     mobile,
     specialism,
-    startDate,
-    endDate,
+    startDate = new Date('2023-01-01'),
+    endDate = new Date('2023-06-30'),
     passwordHash = null,
     profileImage = null,
     role = 'STUDENT'
@@ -132,22 +132,39 @@ export default class User {
     const data = {
       email: this.email,
       password: this.passwordHash,
-      role: this.role
+      role: this.role,
+      cohortId: 1
     }
 
-    if (this.cohortId) {
+    // This will break the code currently, needs a fix if you want to include cohort as its own table
+    /* if (this.cohortId) {
       data.cohort = {
         connectOrCreate: {
           id: this.cohortId
         }
       }
-    }
+    } */
 
     if (this.firstName && this.lastName) {
       data.profile = {
         create: {
           firstName: this.firstName,
           lastName: this.lastName,
+          bio: this.bio,
+          githubUrl: this.githubUrl,
+          profileImage: this.profileImage,
+          username: this.username,
+          mobile: this.mobile,
+          specialism: this.specialism,
+          startDate: this.startDate,
+          endDate: this.endDate
+        }
+      }
+    } else {
+      data.profile = {
+        create: {
+          firstName: '',
+          lastName: '',
           bio: this.bio,
           githubUrl: this.githubUrl,
           profileImage: this.profileImage,
