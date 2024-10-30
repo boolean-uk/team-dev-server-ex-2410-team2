@@ -78,7 +78,7 @@ export default class User {
     githubUrl,
     username,
     mobile,
-    specialism,
+    specialism = 'Software Developer',
     startDate = new Date('2023-01-01'),
     endDate = new Date('2023-06-30'),
     passwordHash = null,
