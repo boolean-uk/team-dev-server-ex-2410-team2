@@ -168,7 +168,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '400':
-          description: Invalid email/password supplied
+          description: Invalid email/password/profile information supplied
           content:
             application/json:
               schema:
@@ -198,14 +198,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
-        401:
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
+        400:
+          description: fail
           content:
             application/json:
               schema:
@@ -226,140 +220,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Posts'
         '401':
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /posts/{id}:
-    get:
-      tags:
-        - post
-      summary: Get a post by id
-      description: get a post
-      operationId: getPostById
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: 'The post id that needs to be updated'
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Posts'
-        '401':
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    patch:
-      tags:
-        - post
-      summary: Patch a post by id
-      description: patch a post
-      operationId: updatePostById
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: 'The post id that needs to be updated'
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        description: The post description
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdatePost'
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Posts'
-        '401':
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    delete:
-      tags:
-        - post
-      summary: Delete a post by id
-      description: delete a post
-      operationId: deletePostById
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: id
-          in: path
-          description: 'The post id that needs to be updated'
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Posts'
-        '401':
-          description: Unauthorised
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '500':
-          description: Server error
+          description: fail
           content:
             application/json:
               schema:
@@ -632,12 +493,6 @@ components:
                         format: date-time
                       profileImage:
                         type: string
-
-    UpdatePost:
-      type: object
-      properties:
-        content:
-          type: string
 
     CreatedUser:
       type: object
