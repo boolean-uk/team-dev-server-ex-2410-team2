@@ -133,7 +133,7 @@ export default class User {
       email: this.email,
       password: this.passwordHash,
       role: this.role,
-      cohortId: 1
+      cohortId: this.cohortId
     }
 
     // This will break the code currently, needs a fix if you want to include cohort as its own table
