@@ -1,6 +1,24 @@
 import { sendDataResponse } from '../utils/responses.js'
 
 export async function validateUser(req, res, next) {
+  const validateEmail = (email) => {
+    if (
+      email.length < 7 ||
+      email.indexOf('@') <= 0 ||
+      email.slice(-4) !== '.com' ||
+      (email.match(/@/g) || []).length > 1 ||
+      email.charAt(email.length - 5) === '@'
+    ) {
+      return 'Email is invalid'
+    }
+    return null
+  }
+
+  const emailError = validateEmail(req.body.email)
+  if (emailError) {
+    return sendDataResponse(res, 400, { email: emailError })
+  }
+
   const validatePassword = (password) => {
     const minLength = 8
     const hasUpperCase = /[A-Z]/.test(password)
