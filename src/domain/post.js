@@ -1,16 +1,40 @@
 import dbClient from '../utils/dbClient.js'
 
 export default class Post {
-  constructor(id = null) {
+  constructor(
+    id = null,
+    content = '',
+    user = null,
+    createdAt = null,
+    updatedAt = null
+  ) {
     this.id = id
+    this.content = content
+    this.user = user
+    this.createdAt = createdAt
+    this.updatedAt = updatedAt
   }
 
   toJSON() {
     return {
-      post: {
-        id: this.id,
-        content: this.content,
-        userId: this.userId
+      id: this.id,
+      content: this.content,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+      author: {
+        id: this.user.id,
+        cohortId: this.user.cohortId,
+        role: this.user.role,
+        firstName: this.user.profile.firstName,
+        lastName: this.user.profile.lastName,
+        bio: this.user.profile.bio,
+        githubUrl: this.user.profile.githubUrl,
+        username: this.user.profile.username,
+        mobile: this.user.profile.mobile,
+        specialism: this.user.profile.specialism,
+        startDate: this.user.profile.startDate,
+        endDate: this.user.profile.endDate,
+        profileImage: this.user.profile.profileImage
       }
     }
   }
@@ -22,33 +46,44 @@ export default class Post {
   }
 
   static async getAllPosts() {
-    return dbClient.post.findMany({
+    const posts = await dbClient.post.findMany({
       include: {
         user: {
-          include: {
-            profile: true
-          }
+          include: { profile: true }
         }
       }
     })
+    return posts.map(
+      (post) =>
+        new Post(
+          post.id,
+          post.content,
+          post.user,
+          post.createdAt,
+          post.updatedAt
+        )
+    )
   }
 
   static async getPostById(id) {
-    return dbClient.post.findUnique({
-      where: {
-        id: id
-      },
+    const post = await dbClient.post.findUnique({
+      where: { id },
       include: {
         user: {
-          include: {
-            profile: true
-          }
+          include: { profile: true }
         }
       }
     })
+    return post
+      ? new Post(
+          post.id,
+          post.content,
+          post.user,
+          post.createdAt,
+          post.updatedAt
+        )
+      : null
   }
-
-  // firstName lastName rolle specialism
 
   static async updateContentById(id, content) {
     return dbClient.post.update({
