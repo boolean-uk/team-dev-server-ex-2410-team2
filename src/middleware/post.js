@@ -1,21 +1,19 @@
 import { sendDataResponse } from '../utils/responses.js'
 
 export async function validatePostContent(req, res, next) {
-  const validateContent = (content) => {
-    const maxLength = 200 // Set maximum length
+  const { content } = req.body
+  const maxLength = 200
 
-    if (!content || content.trim() === '') {
-      return 'Content cannot be empty or null'
-    }
-    if (content.length > maxLength) {
-      return `Content cannot exceed ${maxLength} characters`
-    }
-    return null
+  if (!content || content.trim() === '') {
+    return sendDataResponse(res, 400, {
+      content: 'Content cannot be empty or null'
+    })
   }
 
-  const contentError = validateContent(req.body.content)
-  if (contentError) {
-    return sendDataResponse(res, 400, { content: contentError })
+  if (content.length > maxLength) {
+    return sendDataResponse(res, 400, {
+      content: `Content cannot exceed ${maxLength} characters`
+    })
   }
 
   next()
