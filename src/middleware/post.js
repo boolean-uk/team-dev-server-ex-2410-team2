@@ -1,26 +1,22 @@
-import Post from '../models/Post.js'
+import { sendDataResponse } from '../utils/responses.js'
+import Post from '../domain/post.js'
 
 export async function validatePostOwnership(req, res, next) {
   const { id: postId } = req.params
-  const userId = req.user.id
-  const userRole = req.user.role
+  const { id: userId, role: userRole } = req.user
 
   try {
-    const post = await Post.findById(postId)
+    const post = await Post.getPostById(Number(postId))
     if (!post) {
-      return res.status(404).json({ message: 'Post not found' })
+      return sendDataResponse(res, 404, { content: 'Post not found' })
     }
 
-    if (post.userId === userId || userRole === 'TEACHER') {
+    if (post.user.id === userId || userRole === 'TEACHER') {
       return next()
     }
 
-    return res
-      .status(403)
-      .json({ message: 'Forbidden: Not authorized to modify this post' })
+    return sendDataResponse(res, 401, { content: 'Unauthorized' })
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: 'Server error', error: error.message })
+    return sendDataResponse(res, 500, { content: 'Internal server error' })
   }
 }
