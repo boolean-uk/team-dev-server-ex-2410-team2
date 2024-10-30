@@ -11,6 +11,7 @@ tags:
   - name: post
   - name: cohort
   - name: log
+  - name: comment
 paths:
   /users:
     post:
@@ -85,10 +86,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/loginRes'
-
         '400':
           description: Invalid username/password supplied
-
   /users/{id}:
     get:
       tags:
@@ -117,7 +116,6 @@ paths:
                     type: string
                   data:
                     $ref: '#/components/schemas/User'
-
         '400':
           description: fail
           content:
@@ -285,6 +283,103 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /comments:
+    post:
+      tags:
+        - comment
+      summary: Create a comment
+      description: Create a new comment on a post
+      operationId: createComment
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Comment details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComment'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /comments/{commentId}:
+    patch:
+      tags:
+        - comment
+      summary: Update a comment
+      description: Update an existing comment
+      operationId: updateComment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          description: The ID of the comment to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Updated comment details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateComment'
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Comment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - comment
+      summary: Delete a comment
+      description: Delete an existing comment
+      operationId: deleteComment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: commentId
+          in: path
+          description: The ID of the comment to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '404':
+          description: Comment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -306,7 +401,6 @@ components:
                   type: integer
                 content:
                   type: string
-
     Cohort:
       type: object
       properties:
@@ -318,7 +412,6 @@ components:
         updatedAt:
           type: string
           format: string
-
     AllUsers:
       type: object
       properties:
@@ -331,7 +424,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/User'
-
     User:
       type: object
       properties:
@@ -351,7 +443,6 @@ components:
           type: string
         githubUrl:
           type: string
-
     CreateUser:
       type: object
       properties:
@@ -367,7 +458,6 @@ components:
           type: string
         password:
           type: string
-
     UpdateUser:
       type: object
       properties:
@@ -387,7 +477,6 @@ components:
           type: string
         githubUrl:
           type: string
-
     Posts:
       type: object
       properties:
@@ -430,7 +519,6 @@ components:
                         type: string
                       profileImageUrl:
                         type: string
-    
     CreatedUser:
       type: object
       properties:
@@ -464,7 +552,6 @@ components:
           type: string
         password:
           type: string
-
     loginRes:
       type: object
       properties:
@@ -501,7 +588,6 @@ components:
           properties:
             error:
               type: string
-
     Log:
       type: object
       properties:
@@ -535,3 +621,33 @@ components:
                         type: integer
                       content:
                         type: string
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        userId:
+          type: integer
+        postId:
+          type: integer
+    CreateComment:
+      type: object
+      properties:
+        content:
+          type: string
+        postId:
+          type: integer
+        userId:
+          type: integer
+    UpdateComment:
+      type: object
+      properties:
+        content:
+          type: string
+    Success:
+      type: object
+      properties:
+        message:
+          type: string

@@ -7,6 +7,7 @@ import cors from 'cors'
 import userRouter from './routes/user.js'
 import postRouter from './routes/post.js'
 import authRouter from './routes/auth.js'
+import commentRouter from './routes/comment.js'
 import cohortRouter from './routes/cohort.js'
 import deliveryLogRouter from './routes/deliveryLog.js'
 
@@ -24,6 +25,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc))
 app.use('/users', userRouter)
 app.use('/posts', postRouter)
 app.use('/cohorts', cohortRouter)
+app.use('/comments', commentRouter)
 app.use('/logs', deliveryLogRouter)
 app.use('/', authRouter)
 
