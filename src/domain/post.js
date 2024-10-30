@@ -25,17 +25,8 @@ export default class Post {
     return dbClient.post.findMany({
       include: {
         user: {
-          select: {
-            id: true,
-            role: true,
-            cohortId: true,
-            profile: {
-              select: {
-                firstName: true,
-                lastName: true,
-                specialism: true
-              }
-            }
+          include: {
+            profile: true
           }
         }
       }
@@ -49,17 +40,8 @@ export default class Post {
       },
       include: {
         user: {
-          select: {
-            id: true,
-            role: true,
-            cohortId: true,
-            profile: {
-              select: {
-                firstName: true,
-                lastName: true,
-                specialism: true
-              }
-            }
+          include: {
+            profile: true
           }
         }
       }
