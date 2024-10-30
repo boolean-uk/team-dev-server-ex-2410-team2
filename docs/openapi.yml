@@ -191,8 +191,6 @@ paths:
               properties:
                 content:
                   type: string
-                userid:
-                  type: integer
       responses:
         201:
           description: success
@@ -200,8 +198,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Post'
-        400:
-          description: fail
+        401:
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
           content:
             application/json:
               schema:
@@ -222,7 +226,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Posts'
         '401':
-          description: fail
+          description: Unauthorised
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
           content:
             application/json:
               schema:

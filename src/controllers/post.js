@@ -3,8 +3,8 @@ import Post from '../domain/post.js'
 import User from '../domain/user.js'
 
 export const create = async (req, res) => {
-  const { content, userid } = req.body
-  const user = await User.findById(userid)
+  const { content } = req.body
+  const user = await User.findById(req.user.id)
 
   if (!content) {
     return sendDataResponse(res, 400, { content: 'Must provide content' })
