@@ -2,10 +2,10 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: 1.0
+  version: '1.0'
 
 servers:
-  - url: http://localhost:4000/
+  - url: 'http://localhost:4000/'
 tags:
   - name: user
   - name: post
@@ -158,6 +158,12 @@ paths:
                 $ref: '#/components/schemas/CreatedUser'
         '401':
           description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid email/password/profile information supplied
           content:
             application/json:
               schema:
@@ -390,6 +396,86 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - cohort
+      summary: Get all cohorts
+      operationId: getAllCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    properties:
+                      cohort:
+                        $ref: '#/components/schemas/Cohort'
+        '401':
+          description: fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /cohorts/{id}:
+    get:
+      tags:
+        - cohort
+      summary: Get a cohort by id
+      operationId: getCohortById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The cohort id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  data:
+                    properties:
+                      cohort:
+                        $ref: '#/components/schemas/Cohort'
+        '401':
+          description: Unautorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -416,12 +502,19 @@ components:
       properties:
         id:
           type: integer
+        cohortName:
+          type: string
         createdAt:
           type: string
           format: string
         updatedAt:
           type: string
-          format: string
+          format: date-time
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
     AllUsers:
       type: object
       properties:
@@ -589,6 +682,21 @@ components:
                   type: string
                 githubUrl:
                   type: string
+                username:
+                  type: string
+                mobile:
+                  type: string
+                specialism:
+                  type: string
+                startDate:
+                  type: string
+                  format: date-time
+                endDate:
+                  type: string
+                  format: date-time
+                profileImage:
+                  type: string
+
     Error:
       type: object
       properties:

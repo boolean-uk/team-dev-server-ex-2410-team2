@@ -3,7 +3,11 @@ import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
 async function seed() {
-  const cohort = await createCohort()
+  const cohort = await createCohort(
+    'Boolean 2024',
+    new Date('2024-08-08'),
+    new Date('2024-11-01')
+  )
 
   const student = await createUser(
     'student@test.com',
@@ -81,13 +85,15 @@ async function createComment(userId, postId, content) {
   return comment
 }
 
-async function createCohort() {
+async function createCohort(cohortName, startDate, endDate) {
   const cohort = await prisma.cohort.create({
-    data: {}
+    data: {
+      cohortName,
+      startDate,
+      endDate
+    }
   })
-
   console.info('Cohort created', cohort)
-
   return cohort
 }
 

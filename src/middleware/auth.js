@@ -40,6 +40,11 @@ export async function validateLoggedInUser(req, res, next) {
     }
   }
 
+  // If no password was supplied, skip the password validation
+  if (!req.body.password) {
+    res.locals.skipPasswordValidation = true
+  }
+
   next()
 }
 
