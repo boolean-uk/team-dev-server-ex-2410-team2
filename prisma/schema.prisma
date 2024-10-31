@@ -66,8 +66,7 @@ model Comment {
   user      User      @relation(fields: [userId], references: [id])
   postId    Int
   post      Post      @relation(fields: [postId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
+ 
 }
 
 model DeliveryLog {

@@ -7,18 +7,28 @@ export default class Comment {
    * @returns {Comment}
    */
   static fromDb(comment) {
-    return new Comment({
-      id: comment.id,
-      content: comment.content,
-      userId: comment.userId,
-      postId: comment.postId
-    })
+    return new Comment(
+      comment.id,
+      comment.content,
+      comment.userId,
+      comment.postId,
+      comment.post
+    )
   }
 
-  constructor({ id, content, userId, postId }) {
+  constructor({
+    id = null,
+    content,
+    user = null,
+    post = null,
+    userId,
+    postId
+  }) {
     this.id = id
     this.content = content
     this.userId = userId
+    this.user = user
+    this.post = post
     this.postId = postId
   }
 
@@ -37,87 +47,66 @@ export default class Comment {
 
   /**
    * Saves the comment to the database
+   * @param {string} content
+   * @param {object} user
+   * @param {int} postId
    * @returns {Comment}
    */
-  async save() {
-    try {
-      const createdComment = await dbClient.comment.create({
-        data: {
-          content: this.content,
-          userId: this.userId,
-          postId: this.postId
-        },
-        include: {
-          user: true,
-          post: true
-        }
-      })
-
-      return Comment.fromDb(createdComment)
-    } catch (error) {
-      console.error('Error saving comment:', error)
-      throw new Error('Error saving comment')
-    }
-  }
-
-  async update(content) {
-    try {
-      const updatedComment = await dbClient.comment.update({
-        where: { id: this.id },
-        data: { content },
-        include: {
-          user: true,
-          post: true
-        }
-      })
-
-      return Comment.fromDb(updatedComment)
-    } catch (error) {
-      console.error('Error updating comment:', error)
-      throw new Error('Error updating comment')
-    }
-  }
-
-  static async _findByUnique(field, value) {
-    if (!value) {
-      throw new Error(`${field} is required to find a comment`);
-    }
-
-    try {
-      const comment = await dbClient.comment.findUnique({
-        where: { [field]: parseInt(value, 10) },
-        include: {
-          user: true,
-          post: true
-        }
-      })
-
-      if (!comment) {
-        throw new Error('Comment not found');
+  static async createComment(content, user, postId) {
+    return dbClient.Comment.create({
+      data: {
+        content,
+        userId: user.id,
+        postId
       }
-
-      return Comment.fromDb(comment)
-    } catch (error) {
-      console.error(`Error finding comment by ${field}:`, error)
-      throw new Error(`Error finding comment by ${field}`)
-    }
+    })
   }
 
   /**
-   * Deletes the comment from the database
-   * @returns {boolean}
+   * Gets a comment by its ID
+   * @param {int} id
+   * @returns {Comment}
    */
-  async delete() {
-    try {
-      await dbClient.comment.delete({
-        where: { id: this.id }
-      })
+  static async getCommentById(id) {
+    const comment = await dbClient.comment.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        post: true
+      }
+    })
+    return comment
+      ? new Comment({
+          id: comment.id,
+          content: comment.content,
+          userId: comment.userId,
+          postId: comment.postId
+        })
+      : null
+  }
 
-      return true
-    } catch (error) {
-      console.error('Error deleting comment:', error)
-      throw new Error('Error deleting comment')
-    }
+  /**
+   * Updates the content of a comment by its ID
+   * @param {int} id
+   * @param {string} content
+   * @returns {Comment}
+   */
+  static async updateContentById(id, content, userId) {
+    return dbClient.comment.update({
+      where: { id },
+      data: { content, userId }
+    })
+  }
+
+  /**
+   * Deletes a comment by its ID
+   * @param {int} id
+   * @returns {Comment}
+   */
+  static async deleteCommentById(id) {
+    return dbClient.comment.delete({
+      where: { id }
+    })
   }
 
   /**
@@ -126,7 +115,30 @@ export default class Comment {
    * @returns {Comment}
    */
   static async findById(id) {
-    return Comment._findByUnique('id', id)
+    console.log(id)
+    if (!id || isNaN(id)) {
+      throw new Error('Invalid comment ID')
+    }
+    const comment = await dbClient.comment.findUnique({
+      where: { id: parseInt(id, 10) },
+      include: {
+        user: {
+          include: { profile: true }
+        },
+        post: true
+      }
+    })
+
+    return comment
+      ? new Comment({
+          id: comment.id,
+          content: comment.content,
+          userId: comment.userId,
+          postId: comment.postId,
+          user: comment.user,
+          post: comment.post
+        })
+      : null
   }
 
   /**
