@@ -1,7 +1,7 @@
 import dbClient from '../utils/dbClient.js'
 import User from './user.js'
 
-export class Cohort {
+export default class Cohort {
   static fromDb(cohort) {
     return new Cohort(
       cohort.id,
