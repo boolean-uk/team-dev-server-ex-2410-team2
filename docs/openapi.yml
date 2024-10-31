@@ -437,7 +437,6 @@ paths:
       tags:
         - cohort
       summary: Get all cohorts
-      description: This can only be done by the logged in user with role TEACHER.
       operationId: getAllCohorts
       security:
         - bearerAuth: []
@@ -472,7 +471,6 @@ paths:
       tags:
         - cohort
       summary: Get a cohort by id
-      description: This can only be done by the logged in user with role TEACHER.
       operationId: getCohortById
       security:
         - bearerAuth: []
