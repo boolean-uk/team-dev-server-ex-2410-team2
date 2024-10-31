@@ -729,7 +729,7 @@ components:
                   format: date-time
                 profileImage:
                   type: string
-                  
+
     Error:
       type: object
       properties:
