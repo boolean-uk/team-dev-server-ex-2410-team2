@@ -2,10 +2,10 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: '1.0'
+  version: "1.0"
 
 servers:
-  - url: 'http://localhost:4000/'
+  - url: "http://localhost:4000/"
 tags:
   - name: user
   - name: post
@@ -168,7 +168,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '400':
-          description: Invalid email/password/profile information supplied
+          description: Invalid email/password supplied
           content:
             application/json:
               schema:
