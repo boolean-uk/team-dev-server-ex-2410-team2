@@ -73,4 +73,23 @@ export default class Cohort {
 
     return Cohort.fromDb(updatedCohort)
   }
+
+  static async getAllCohorts() {
+    const cohorts = await dbClient.cohort.findMany({
+      include: {
+        students: true
+      }
+    })
+    return cohorts.map((cohort) => Cohort.fromDb(cohort))
+  }
+
+  static async getCohortById(id) {
+    const cohort = await dbClient.cohort.findUnique({
+      where: { id },
+      include: {
+        students: true
+      }
+    })
+    return cohort ? Cohort.fromDb(cohort) : null
+  }
 }
