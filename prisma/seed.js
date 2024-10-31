@@ -85,24 +85,6 @@ async function createComment(userId, postId, content) {
   return comment
 }
 
-async function createComment(userId, postId, content) {
-  const comment = await prisma.comment.create({
-    data: {
-      userId,
-      postId,
-      content
-    },
-    include: {
-      user: true,
-      post: true
-    }
-  })
-
-  console.info('Comment created', comment)
-
-  return comment
-}
-
 async function createCohort(cohortName, startDate, endDate) {
   const cohort = await prisma.cohort.create({
     data: {
