@@ -7,6 +7,7 @@ import {
   deleteById
 } from '../controllers/post.js'
 import { validateAuthentication } from '../middleware/auth.js'
+
 import {
   validatePostOwnership,
   validatePostContent
