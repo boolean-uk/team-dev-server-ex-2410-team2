@@ -467,7 +467,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCohort'
+              $ref: '#/components/schemas/UpdateCohort'
       responses:
         '201':
           description: Success
@@ -527,6 +527,91 @@ paths:
           content:
             application/json:
               $ref: '#/components/schemas/CohortResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - cohort
+      summary: Update a cohort by id
+      description: This can only be done by the logged-in user with role TEACHER.
+      operationId: updateCohortById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The cohort ID that needs to be updated.'
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: The cohort information to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCohort'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              $ref: '#/components/schemas/CohortResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - cohort
+      summary: Delete a cohort by id
+      description: This can only be done by the logged-in user with role TEACHER.
+      operationId: deleteCohortById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The cohort ID that needs to be deleted.'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohortResponse'
         '401':
           description: Unauthorized
           content:
@@ -631,6 +716,18 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/User'
+
+    UpdateCohort:
+      type: object
+      properties:
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
 
     Log:
       type: object
@@ -776,9 +873,12 @@ components:
         status:
           type: string
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/User'
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
 
     UserResponse:
       type: object

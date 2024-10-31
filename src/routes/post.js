@@ -11,12 +11,13 @@ import {
 import { validateAuthentication } from '../middleware/auth.js'
 import {
   validatePostOwnership,
+  validatePostContent,
   validatePostExists
 } from '../middleware/post.js'
 
 const router = Router()
 
-router.post('/', validateAuthentication, create)
+router.post('/', validateAuthentication, validatePostContent, create)
 router.get('/', validateAuthentication, getAll)
 router.get('/:id', validateAuthentication, getById)
 router.patch('/:id', validateAuthentication, validatePostOwnership, updateById)

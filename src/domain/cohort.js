@@ -8,7 +8,9 @@ export default class Cohort {
       cohort.cohortName,
       cohort.startDate,
       cohort.endDate,
-      cohort.students.map((student) => User.fromDb(student))
+      cohort.students
+        ? cohort.students.map((student) => User.fromDb(student))
+        : []
     )
   }
 
@@ -19,7 +21,7 @@ export default class Cohort {
       cohortName,
       startDate,
       endDate,
-      students.map((student) => User.fromJson(student))
+      students ? students.map((student) => User.fromJson(student)) : []
     )
   }
 
@@ -46,13 +48,8 @@ export default class Cohort {
   async save() {
     const data = {
       cohortName: this.cohortName,
-      startDate: this.startDate
-    }
-
-    if (this.endDate) {
-      data.endDate = this.endDate
-    } else {
-      data.endDate = null
+      startDate: this.startDate,
+      endDate: this.endDate !== undefined ? this.endDate : null
     }
 
     const createdCohort = await dbClient.cohort.create({ data })
@@ -91,5 +88,27 @@ export default class Cohort {
       }
     })
     return cohort ? Cohort.fromDb(cohort) : null
+  }
+
+  static async updateById(id, cohort) {
+    const data = {}
+    if (cohort.cohortName !== undefined) data.cohortName = cohort.cohortName
+    if (cohort.startDate !== undefined) data.startDate = cohort.startDate
+    if (cohort.endDate !== undefined) data.endDate = cohort.endDate
+
+    return this.fromDb(
+      await dbClient.cohort.update({
+        where: { id },
+        data
+      })
+    )
+  }
+
+  static async deleteById(id) {
+    return this.fromDb(
+      await dbClient.cohort.delete({
+        where: { id }
+      })
+    )
   }
 }
