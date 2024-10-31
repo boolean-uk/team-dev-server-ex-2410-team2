@@ -26,6 +26,7 @@ model User {
   cohort        Cohort?   @relation(fields: [cohortId], references: [id])
   posts         Post[]
   deliveryLogs  DeliveryLog[]
+  likedPosts    Post[]        @relation("UserLikesPosts", references: [id])
 }
 
 model Profile {
@@ -60,6 +61,8 @@ model Post {
   user    User          @relation(fields: [userId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now())
+  likedBy       User[]        @relation("UserLikesPosts", references: [id])
+
 }
 
 model DeliveryLog {

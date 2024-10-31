@@ -11,6 +11,7 @@ tags:
   - name: post
   - name: cohort
   - name: log
+
 paths:
   /users:
     post:
@@ -83,14 +84,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/login'
+              $ref: '#/components/schemas/Login'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/loginRes'
+                $ref: '#/components/schemas/LoginRes'
         '400':
           description: Invalid username/password supplied
   /users/{id}:
@@ -105,7 +106,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: 'The name that needs to be fetched. Use user1 for testing. '
+          description: 'The ID of the user to fetch.'
           required: true
           schema:
             type: string
@@ -115,12 +116,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/UserResponse'
         '400':
           description: fail
           content:
@@ -137,14 +133,14 @@ paths:
       tags:
         - user
       summary: Update a user
-      description: Only users with a TEACHER role can update the cohortId or role. Users with Students role can only update their own details.
+      description: Only users with a TEACHER role can update the cohortId or role. Users with STUDENT role can only update their own details.
       operationId: userUpdate
       security:
         - bearerAuth: []
       parameters:
         - name: id
           in: path
-          description: 'The user id that needs to be updated'
+          description: 'The user ID that needs to be updated.'
           required: true
           schema:
             type: string
@@ -155,14 +151,14 @@ paths:
             schema:
               $ref: '#/components/schemas/UpdateUser'
       responses:
-        '201':
+        '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreatedUser'
+                $ref: '#/components/schemas/UserResponse'
         '401':
-          description: fail
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -178,7 +174,7 @@ paths:
       tags:
         - post
       summary: Create post
-      description: This can only be done by the logged in user.
+      description: This can only be done by the logged-in user.
       operationId: createPost
       security:
         - bearerAuth: []
@@ -187,19 +183,16 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                content:
-                  type: string
+              $ref: '#/components/schemas/CreatePost'
       responses:
-        201:
-          description: success
+        '201':
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Post'
-        401:
-          description: Unauthorised
+                $ref: '#/components/schemas/PostResponse'
+        '401':
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -214,7 +207,7 @@ paths:
       tags:
         - post
       summary: Get all posts
-      description: get all posts
+      description: Get all posts
       operationId: getPosts
       security:
         - bearerAuth: []
@@ -224,9 +217,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Posts'
+                $ref: '#/components/schemas/PostsResponse'
         '401':
-          description: Unauthorised
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -241,15 +234,15 @@ paths:
     get:
       tags:
         - post
-      summary: Get a post by id
-      description: get a post
+      summary: Get a post by ID
+      description: Get a post
       operationId: getPostById
       security:
         - bearerAuth: []
       parameters:
         - name: id
           in: path
-          description: 'The post id that needs to be updated'
+          description: 'The post ID to retrieve.'
           required: true
           schema:
             type: integer
@@ -259,15 +252,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Posts'
+                $ref: '#/components/schemas/PostResponse'
         '401':
-          description: Unauthorised
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Not Found
+          description: Not found
           content:
             application/json:
               schema:
@@ -281,20 +274,20 @@ paths:
     patch:
       tags:
         - post
-      summary: Patch a post by id
-      description: patch a post
+      summary: Update a post by ID
+      description: Update a post
       operationId: updatePostById
       security:
         - bearerAuth: []
       parameters:
         - name: id
           in: path
-          description: 'The post id that needs to be updated'
+          description: 'The post ID that needs to be updated.'
           required: true
           schema:
             type: integer
       requestBody:
-        description: The post description
+        description: The post content to update
         content:
           application/json:
             schema:
@@ -305,15 +298,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Posts'
+                $ref: '#/components/schemas/PostResponse'
         '401':
-          description: Unauthorised
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Not Found
+          description: Not found
           content:
             application/json:
               schema:
@@ -327,15 +320,15 @@ paths:
     delete:
       tags:
         - post
-      summary: Delete a post by id
-      description: delete a post
+      summary: Delete a post by ID
+      description: Delete a post
       operationId: deletePostById
       security:
         - bearerAuth: []
       parameters:
         - name: id
           in: path
-          description: 'The post id that needs to be updated'
+          description: 'The post ID that needs to be deleted.'
           required: true
           schema:
             type: integer
@@ -345,15 +338,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Posts'
+                $ref: '#/components/schemas/PostResponse'
         '401':
-          description: Unauthorised
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: Not Found
+          description: Not found
           content:
             application/json:
               schema:
@@ -364,12 +357,82 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /posts/{id}/like:
+    post:
+      tags:
+        - post
+      summary: Like a post
+      description: Allows a user to like a post.
+      operationId: likePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the post to like
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post liked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /posts/{id}/unlike:
+    post:
+      tags:
+        - post
+      summary: Unlike a post
+      description: Allows a user to unlike a post.
+      operationId: unlikePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the post to unlike
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post unliked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /logs:
     post:
       tags:
         - log
       summary: Create delivery log
-      description: This can only be done by an authorised teacher user.
+      description: This can only be done by an authorized teacher user.
       operationId: createLog
       security:
         - bearerAuth: []
@@ -378,28 +441,16 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                date:
-                  type: string
-                cohortId:
-                  type: integer
-                lines:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      content:
-                        type: string
+              $ref: '#/components/schemas/CreateLog'
       responses:
-        201:
-          description: success
+        '201':
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Log'
+                $ref: '#/components/schemas/LogResponse'
         '401':
-          description: Unauthorised
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -409,26 +460,25 @@ paths:
       tags:
         - cohort
       summary: Create a cohort
-      description: This can only be done by the logged in user with role TEACHER.
+      description: This can only be done by a logged-in user with role TEACHER.
       operationId: createCohort
       security:
         - bearerAuth: []
+      requestBody:
+        description: Created cohort object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCohort'
       responses:
-        201:
-          description: success
+        '201':
+          description: Success
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                  data:
-                    properties:
-                      cohort:
-                        $ref: '#/components/schemas/Cohort'
-        400:
-          description: fail
+                $ref: '#/components/schemas/CohortResponse'
+        '400':
+          description: Fail
           content:
             application/json:
               schema:
@@ -441,45 +491,6 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    Post:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          properties:
-            post:
-              properties:
-                id:
-                  type: integer
-                content:
-                  type: string
-
-    Cohort:
-      type: object
-      properties:
-        id:
-          type: integer
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-
-    AllUsers:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          type: object
-          properties:
-            users:
-              type: array
-              items:
-                $ref: '#/components/schemas/User'
-
     User:
       type: object
       properties:
@@ -513,7 +524,60 @@ components:
           format: date-time
         profileImage:
           type: string
-
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        author:
+          $ref: '#/components/schemas/User'
+        likedBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    Cohort:
+      type: object
+      properties:
+        id:
+          type: integer
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+    Log:
+      type: object
+      properties:
+        id:
+          type: integer
+        date:
+          type: string
+        cohortId:
+          type: integer
+        author:
+          $ref: '#/components/schemas/User'
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/LogLine'
+    LogLine:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
     CreateUser:
       type: object
       properties:
@@ -543,7 +607,6 @@ components:
           type: string
         profileImage:
           type: string
-
     UpdateUser:
       type: object
       properties:
@@ -577,118 +640,126 @@ components:
           format: date-time
         profileImage:
           type: string
-
-    Posts:
+    CreatePost:
       type: object
       properties:
-        status:
+        content:
           type: string
-        data:
-          type: object
-          properties:
-            posts:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  content:
-                    type: string
-                  createdAt:
-                    type: string
-                    format: date-time
-                  updatedAt:
-                    type: string
-                    format: date-time
-                  author:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      cohortId:
-                        type: integer
-                      role:
-                        type: string
-                      firstName:
-                        type: string
-                      lastName:
-                        type: string
-                      bio:
-                        type: string
-                      githubUrl:
-                        type: string
-                      username:
-                        type: string
-                      mobile:
-                        type: string
-                      specialism:
-                        type: string
-                      startDate:
-                        type: string
-                        format: date-time
-                      endDate:
-                        type: string
-                        format: date-time
-                      profileImage:
-                        type: string
-
     UpdatePost:
       type: object
       properties:
         content:
           type: string
-
+    CreateCohort:
+      type: object
+      properties:
+        cohortName:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+    CreateLog:
+      type: object
+      properties:
+        date:
+          type: string
+        cohortId:
+          type: integer
+        lines:
+          type: array
+          items:
+            type: object
+            properties:
+              content:
+                type: string
     CreatedUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        cohortId:
+          type: integer
+        role:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        bio:
+          type: string
+        githubUrl:
+          type: string
+        username:
+          type: string
+        mobile:
+          type: string
+        specialism:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        profileImage:
+          type: string
+    AllUsers:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    UserResponse:
       type: object
       properties:
         status:
           type: string
-          example: success
         data:
-          properties:
-            user:
-              properties:
-                id:
-                  type: integer
-                email:
-                  type: string
-                cohortId:
-                  type: integer
-                role:
-                  type: string
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                bio:
-                  type: string
-                githubUrl:
-                  type: string
-                username:
-                  type: string
-                mobile:
-                  type: string
-                specialism:
-                  type: string
-                startDate:
-                  type: string
-                  format: date-time
-                endDate:
-                  type: string
-                  format: date-time
-                profileImage:
-                  type: string
-
-    login:
+          $ref: '#/components/schemas/User'
+    PostResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          $ref: '#/components/schemas/Post'
+    PostsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+    CohortResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          $ref: '#/components/schemas/Cohort'
+    LogResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          $ref: '#/components/schemas/Log'
+    Login:
       type: object
       properties:
         email:
           type: string
         password:
           type: string
-
-    loginRes:
+    LoginRes:
       type: object
       properties:
         status:
@@ -698,38 +769,7 @@ components:
             token:
               type: string
             user:
-              properties:
-                id:
-                  type: integer
-                email:
-                  type: string
-                cohortId:
-                  type: integer
-                role:
-                  type: string
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                bio:
-                  type: string
-                githubUrl:
-                  type: string
-                username:
-                  type: string
-                mobile:
-                  type: string
-                specialism:
-                  type: string
-                startDate:
-                  type: string
-                  format: date-time
-                endDate:
-                  type: string
-                  format: date-time
-                profileImage:
-                  type: string
-                  
+              $ref: '#/components/schemas/User'
     Error:
       type: object
       properties:
@@ -739,37 +779,3 @@ components:
           properties:
             error:
               type: string
-
-    Log:
-      type: object
-      properties:
-        status:
-          type: string
-        data:
-          properties:
-            log:
-              properties:
-                id:
-                  type: integer
-                cohortId:
-                  type: integer
-                date:
-                  type: string
-                author:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    firstName:
-                      type: string
-                    lastName:
-                      type: string
-                lines:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      id:
-                        type: integer
-                      content:
-                        type: string

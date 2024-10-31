@@ -6,13 +6,15 @@ export default class Post {
     content = '',
     user = null,
     createdAt = null,
-    updatedAt = null
+    updatedAt = null,
+    likedBy = []
   ) {
     this.id = id
     this.content = content
     this.user = user
     this.createdAt = createdAt
     this.updatedAt = updatedAt
+    this.likedBy = likedBy
   }
 
   toJSON() {
@@ -35,13 +37,27 @@ export default class Post {
         startDate: this.user.profile.startDate,
         endDate: this.user.profile.endDate,
         profileImage: this.user.profile.profileImage
-      }
+      },
+      likedBy: this.likedBy.map((user) => ({
+        id: user.id,
+        firstName: user.profile.firstName,
+        lastName: user.profile.lastName,
+        email: user.email
+      }))
     }
   }
 
   static async createPost(content, user) {
     return dbClient.post.create({
-      data: { content: content, userId: user.id }
+      data: { content: content, userId: user.id },
+      include: {
+        user: {
+          include: { profile: true }
+        },
+        likedBy: {
+          include: { profile: true }
+        }
+      }
     })
   }
 
@@ -49,6 +65,9 @@ export default class Post {
     const posts = await dbClient.post.findMany({
       include: {
         user: {
+          include: { profile: true }
+        },
+        likedBy: {
           include: { profile: true }
         }
       }
@@ -60,7 +79,8 @@ export default class Post {
           post.content,
           post.user,
           post.createdAt,
-          post.updatedAt
+          post.updatedAt,
+          post.likedBy
         )
     )
   }
@@ -71,6 +91,9 @@ export default class Post {
       include: {
         user: {
           include: { profile: true }
+        },
+        likedBy: {
+          include: { profile: true }
         }
       }
     })
@@ -80,7 +103,8 @@ export default class Post {
           post.content,
           post.user,
           post.createdAt,
-          post.updatedAt
+          post.updatedAt,
+          post.likedBy
         )
       : null
   }
@@ -96,5 +120,59 @@ export default class Post {
     return dbClient.post.delete({
       where: { id: id }
     })
+  }
+
+  static async likePost(postId, userId) {
+    const updatedPost = await dbClient.post.update({
+      where: { id: postId },
+      data: {
+        likedBy: {
+          connect: { id: userId }
+        }
+      },
+      include: {
+        user: {
+          include: { profile: true }
+        },
+        likedBy: {
+          include: { profile: true }
+        }
+      }
+    })
+    return new Post(
+      updatedPost.id,
+      updatedPost.content,
+      updatedPost.user,
+      updatedPost.createdAt,
+      updatedPost.updatedAt,
+      updatedPost.likedBy
+    )
+  }
+
+  static async unlikePost(postId, userId) {
+    const updatedPost = await dbClient.post.update({
+      where: { id: postId },
+      data: {
+        likedBy: {
+          disconnect: { id: userId }
+        }
+      },
+      include: {
+        user: {
+          include: { profile: true }
+        },
+        likedBy: {
+          include: { profile: true }
+        }
+      }
+    })
+    return new Post(
+      updatedPost.id,
+      updatedPost.content,
+      updatedPost.user,
+      updatedPost.createdAt,
+      updatedPost.updatedAt,
+      updatedPost.likedBy
+    )
   }
 }
