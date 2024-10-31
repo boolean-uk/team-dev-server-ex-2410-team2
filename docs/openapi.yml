@@ -2,10 +2,10 @@ openapi: 3.0.3
 info:
   title: Team Dev Server API
   description: |-
-  version: "1.0"
+  version: '1.0'
 
 servers:
-  - url: "http://localhost:4000/"
+  - url: 'http://localhost:4000/'
 tags:
   - name: user
   - name: post
@@ -55,23 +55,24 @@ paths:
             type: string
       responses:
         '200':
-          description: successful operation
+          description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllUsers'
         '400':
-          description: fail
+          description: Fail
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: fail
+          description: Fail
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /login:
     post:
       tags:
@@ -94,6 +95,7 @@ paths:
                 $ref: '#/components/schemas/LoginRes'
         '400':
           description: Invalid username/password supplied
+
   /users/{id}:
     get:
       tags:
@@ -112,19 +114,18 @@ paths:
             type: string
       responses:
         '200':
-          description: successful operation
+          description: Successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/UserResponse'
+              $ref: '#/components/schemas/UserResponse'
         '400':
-          description: fail
+          description: Fail
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
         '404':
-          description: fail
+          description: Fail
           content:
             application/json:
               schema:
@@ -155,8 +156,7 @@ paths:
           description: Successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/UserResponse'
+              $ref: '#/components/schemas/UserResponse'
         '401':
           description: Unauthorized
           content:
@@ -169,6 +169,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /posts:
     post:
       tags:
@@ -189,8 +190,7 @@ paths:
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/PostResponse'
+              $ref: '#/components/schemas/PostResponse'
         '401':
           description: Unauthorized
           content:
@@ -216,8 +216,7 @@ paths:
           description: Successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/PostsResponse'
+              $ref: '#/components/schemas/PostsResponse'
         '401':
           description: Unauthorized
           content:
@@ -230,6 +229,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /posts/{id}:
     get:
       tags:
@@ -251,8 +251,7 @@ paths:
           description: Successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/PostResponse'
+              $ref: '#/components/schemas/PostResponse'
         '401':
           description: Unauthorized
           content:
@@ -297,8 +296,7 @@ paths:
           description: Successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/PostResponse'
+              $ref: '#/components/schemas/PostResponse'
         '401':
           description: Unauthorized
           content:
@@ -337,8 +335,7 @@ paths:
           description: Successful operation
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/PostResponse'
+              $ref: '#/components/schemas/PostResponse'
         '401':
           description: Unauthorized
           content:
@@ -357,6 +354,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /posts/{id}/like:
     post:
       tags:
@@ -378,8 +376,7 @@ paths:
           description: Post liked successfully
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/PostResponse'
+              $ref: '#/components/schemas/PostResponse'
         '401':
           description: Unauthorized
           content:
@@ -392,6 +389,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /posts/{id}/unlike:
     post:
       tags:
@@ -413,8 +411,7 @@ paths:
           description: Post unliked successfully
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/PostResponse'
+              $ref: '#/components/schemas/PostResponse'
         '401':
           description: Unauthorized
           content:
@@ -427,6 +424,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /logs:
     post:
       tags:
@@ -447,14 +445,14 @@ paths:
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/LogResponse'
+              $ref: '#/components/schemas/LogResponse'
         '401':
           description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /cohorts:
     post:
       tags:
@@ -475,10 +473,74 @@ paths:
           description: Success
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/CohortResponse'
+              $ref: '#/components/schemas/CohortResponse'
         '400':
           description: Fail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - cohort
+      summary: Get all cohorts
+      operationId: getAllCohorts
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              $ref: '#/components/schemas/CohortsResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /cohorts/{id}:
+    get:
+      tags:
+        - cohort
+      summary: Get a cohort by id
+      operationId: getCohortById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: 'The cohort id'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              $ref: '#/components/schemas/CohortResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error
           content:
             application/json:
               schema:
@@ -490,6 +552,7 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
   schemas:
     User:
       type: object
@@ -524,6 +587,7 @@ components:
           format: date-time
         profileImage:
           type: string
+
     Post:
       type: object
       properties:
@@ -543,6 +607,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/User'
+
     Cohort:
       type: object
       properties:
@@ -550,12 +615,23 @@ components:
           type: integer
         cohortName:
           type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
         startDate:
           type: string
           format: date-time
         endDate:
           type: string
           format: date-time
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
     Log:
       type: object
       properties:
@@ -571,6 +647,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/LogLine'
+
     LogLine:
       type: object
       properties:
@@ -578,6 +655,7 @@ components:
           type: integer
         content:
           type: string
+
     CreateUser:
       type: object
       properties:
@@ -607,6 +685,7 @@ components:
           type: string
         profileImage:
           type: string
+
     UpdateUser:
       type: object
       properties:
@@ -640,16 +719,19 @@ components:
           format: date-time
         profileImage:
           type: string
+
     CreatePost:
       type: object
       properties:
         content:
           type: string
+
     UpdatePost:
       type: object
       properties:
         content:
           type: string
+
     CreateCohort:
       type: object
       properties:
@@ -661,6 +743,7 @@ components:
         endDate:
           type: string
           format: date-time
+
     CreateLog:
       type: object
       properties:
@@ -675,46 +758,28 @@ components:
             properties:
               content:
                 type: string
+
     CreatedUser:
       type: object
       properties:
-        id:
-          type: integer
-        email:
+        status:
           type: string
-        cohortId:
-          type: integer
-        role:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        bio:
-          type: string
-        githubUrl:
-          type: string
-        username:
-          type: string
-        mobile:
-          type: string
-        specialism:
-          type: string
-        startDate:
-          type: string
-          format: date-time
-        endDate:
-          type: string
-          format: date-time
-        profileImage:
-          type: string
+          example: success
+        data:
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+
     AllUsers:
       type: object
       properties:
-        users:
+        status:
+          type: string
+        data:
           type: array
           items:
             $ref: '#/components/schemas/User'
+
     UserResponse:
       type: object
       properties:
@@ -722,6 +787,7 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/User'
+
     PostResponse:
       type: object
       properties:
@@ -729,6 +795,7 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/Post'
+
     PostsResponse:
       type: object
       properties:
@@ -738,6 +805,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Post'
+
     CohortResponse:
       type: object
       properties:
@@ -745,6 +813,17 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/Cohort'
+
+    CohortsResponse:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cohort'
+
     LogResponse:
       type: object
       properties:
@@ -752,6 +831,7 @@ components:
           type: string
         data:
           $ref: '#/components/schemas/Log'
+
     Login:
       type: object
       properties:
@@ -759,6 +839,7 @@ components:
           type: string
         password:
           type: string
+
     LoginRes:
       type: object
       properties:
@@ -770,6 +851,7 @@ components:
               type: string
             user:
               $ref: '#/components/schemas/User'
+
     Error:
       type: object
       properties:

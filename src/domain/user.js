@@ -203,6 +203,7 @@ export default class User {
           lastName: this.lastName,
           bio: this.bio,
           githubUrl: this.githubUrl,
+          profileImage: this.profileImage,
           username: this.username,
           mobile: this.mobile,
           specialism: this.specialism,
