@@ -49,7 +49,10 @@ export default class User {
       profileImage
     } = json
 
-    const passwordHash = await bcrypt.hash(password, 8)
+    let passwordHash = null
+    if (password) {
+      passwordHash = await bcrypt.hash(password, 8)
+    }
 
     return new User(
       null,
@@ -192,29 +195,34 @@ export default class User {
    *  A user instance containing the updated user data
    */
   async update() {
+    const data = {
+      email: this.email,
+      role: this.role,
+      cohortId: this.cohortId,
+      profile: {
+        update: {
+          firstName: this.firstName,
+          lastName: this.lastName,
+          bio: this.bio,
+          githubUrl: this.githubUrl,
+          username: this.username,
+          mobile: this.mobile,
+          specialism: this.specialism,
+          startDate: this.startDate,
+          endDate: this.endDate
+        }
+      }
+    }
+
+    if (this.passwordHash) {
+      data.password = this.passwordHash
+    }
+
     const updatedUser = await dbClient.user.update({
       where: {
         id: this.id
       },
-      data: {
-        email: this.email,
-        password: this.passwordHash,
-        role: this.role,
-        cohortId: this.cohortId,
-        profile: {
-          update: {
-            firstName: this.firstName,
-            lastName: this.lastName,
-            bio: this.bio,
-            githubUrl: this.githubUrl,
-            username: this.username,
-            mobile: this.mobile,
-            specialism: this.specialism,
-            startDate: this.startDate,
-            endDate: this.endDate
-          }
-        }
-      },
+      data,
       include: {
         profile: true
       }

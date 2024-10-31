@@ -19,6 +19,10 @@ export async function validateUser(req, res, next) {
     return sendDataResponse(res, 400, { email: emailError })
   }
 
+  if (res.locals.skipPasswordValidation) {
+    return next()
+  }
+
   const validatePassword = (password) => {
     const minLength = 8
     const hasUpperCase = /[A-Z]/.test(password)

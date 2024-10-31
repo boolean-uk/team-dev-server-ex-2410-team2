@@ -15,9 +15,9 @@ router.get('/:id', validateAuthentication, getById)
 router.patch(
   '/:id',
   validateAuthentication,
+  validateLoggedInUser,
   validateUser,
   validateProfile,
-  validateLoggedInUser,
   validateTeacherRole,
   updateById
 )
