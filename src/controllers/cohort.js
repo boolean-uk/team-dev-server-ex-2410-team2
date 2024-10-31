@@ -30,3 +30,44 @@ export const getById = async (req, res) => {
 
   return sendDataResponse(res, 200, cohort)
 }
+
+export const updateById = async (req, res) => {
+  const { id } = req.params
+  const { name, startDate, endDate } = req.body
+
+  try {
+    const cohort = await Cohort.getById(Number(id))
+    if (cohort) {
+      const content = { name, startDate, endDate }
+      const updatedCohort = await Cohort.updateById(Number(id), content)
+      return sendDataResponse(res, 200, { cohort: updatedCohort })
+    } else {
+      return sendDataResponse(res, 404, {
+        content: `Cohort with id ${id} not found`
+      })
+    }
+  } catch (error) {
+    return sendDataResponse(res, 500, {
+      content: `Internal server error ${error}`
+    })
+  }
+}
+
+export const deleteById = async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const deletedCohort = await Cohort.deleteById(Number(id))
+    if (deletedCohort) {
+      return sendDataResponse(res, 200, { content: 'Cohort deleted' })
+    } else {
+      return sendDataResponse(res, 404, {
+        content: `Cohort with id ${id} not found`
+      })
+    }
+  } catch (error) {
+    return sendDataResponse(res, 500, {
+      content: 'Internal server error'
+    })
+  }
+}
