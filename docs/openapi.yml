@@ -162,6 +162,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid email/password/profile information supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /posts:
     post:
       tags:
@@ -342,7 +348,7 @@ paths:
               required:
                 - content
                 - userId
-             
+
       responses:
         '200':
           description: Updated
