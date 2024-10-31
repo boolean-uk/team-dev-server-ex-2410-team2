@@ -21,7 +21,7 @@ export default class Cohort {
       cohortName,
       startDate,
       endDate,
-      students.map((student) => User.fromJson(student))
+      students ? students.map((student) => User.fromJson(student)) : []
     )
   }
 
@@ -48,13 +48,8 @@ export default class Cohort {
   async save() {
     const data = {
       cohortName: this.cohortName,
-      startDate: this.startDate
-    }
-
-    if (this.endDate) {
-      data.endDate = this.endDate
-    } else {
-      data.endDate = null
+      startDate: this.startDate,
+      endDate: this.endDate !== undefined ? this.endDate : null
     }
 
     const createdCohort = await dbClient.cohort.create({ data })
@@ -97,7 +92,7 @@ export default class Cohort {
 
   static async updateById(id, cohort) {
     const data = {}
-    if (cohort.name !== undefined) data.cohortName = cohort.name
+    if (cohort.cohortName !== undefined) data.cohortName = cohort.cohortName
     if (cohort.startDate !== undefined) data.startDate = cohort.startDate
     if (cohort.endDate !== undefined) data.endDate = cohort.endDate
 

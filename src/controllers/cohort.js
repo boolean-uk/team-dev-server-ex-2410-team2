@@ -2,12 +2,13 @@ import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 import Cohort from '../domain/cohort.js'
 
 export const create = async (req, res) => {
+  const cohort = await Cohort.fromJson(req.body)
   try {
-    const createdCohort = await Cohort.save()
+    const createdCohort = await cohort.save()
 
-    return sendDataResponse(res, 201, createdCohort)
+    return sendDataResponse(res, 201, { cohort: createdCohort })
   } catch (e) {
-    return sendMessageResponse(res, 500, 'Unable to create cohort')
+    return sendMessageResponse(res, 500, `Unable to create cohort ${e}`)
   }
 }
 
@@ -33,14 +34,14 @@ export const getById = async (req, res) => {
 
 export const updateById = async (req, res) => {
   const { id } = req.params
-  const { name, startDate, endDate } = req.body
+  const { cohortName, startDate, endDate } = req.body
 
   try {
     const cohort = await Cohort.getCohortById(Number(id))
     if (cohort) {
-      const content = { name, startDate, endDate }
+      const content = { cohortName, startDate, endDate }
       const updatedCohort = await Cohort.updateById(Number(id), content)
-      return sendDataResponse(res, 200, { cohort: updatedCohort.toJSON() })
+      return sendDataResponse(res, 200, updatedCohort.toJSON())
     } else {
       return sendMessageResponse(res, 404, `Cohort with id ${id} not found`)
     }
