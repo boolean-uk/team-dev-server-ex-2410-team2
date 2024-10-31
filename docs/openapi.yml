@@ -348,7 +348,7 @@ paths:
               required:
                 - content
                 - userId
-             
+
       responses:
         '200':
           description: Updated
