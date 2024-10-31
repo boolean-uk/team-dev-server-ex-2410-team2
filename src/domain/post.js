@@ -6,13 +6,15 @@ export default class Post {
     content = '',
     user = null,
     createdAt = null,
-    updatedAt = null
+    updatedAt = null,
+    comments = []
   ) {
     this.id = id
     this.content = content
     this.user = user
     this.createdAt = createdAt
     this.updatedAt = updatedAt
+    this.comments = comments
   }
 
   toJSON() {
@@ -35,7 +37,11 @@ export default class Post {
         startDate: this.user.profile.startDate,
         endDate: this.user.profile.endDate,
         profileImage: this.user.profile.profileImage
-      }
+      },
+      comments: this.comments.map((comment) => ({
+        id: comment.id,
+        content: comment.content
+      }))
     }
   }
 
@@ -50,7 +56,8 @@ export default class Post {
       include: {
         user: {
           include: { profile: true }
-        }
+        },
+        comments: true
       }
     })
     return posts.map(
@@ -60,7 +67,8 @@ export default class Post {
           post.content,
           post.user,
           post.createdAt,
-          post.updatedAt
+          post.updatedAt,
+          post.comments
         )
     )
   }
@@ -71,7 +79,8 @@ export default class Post {
       include: {
         user: {
           include: { profile: true }
-        }
+        },
+        comments: true
       }
     })
     return post
@@ -80,7 +89,8 @@ export default class Post {
           post.content,
           post.user,
           post.createdAt,
-          post.updatedAt
+          post.updatedAt,
+          post.comments
         )
       : null
   }
