@@ -413,6 +413,11 @@ paths:
       operationId: createCohort
       security:
         - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCohort'
       responses:
         201:
           description: success
@@ -639,7 +644,7 @@ components:
     UpdateCohort:
       type: object
       properties:
-        name:
+        cohortName:
           type: string
         startDate:
           type: string
