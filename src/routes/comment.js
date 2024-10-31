@@ -5,7 +5,7 @@ import { validateAuthentication } from '../middleware/auth.js'
 const router = Router()
 
 router.post('/', validateAuthentication, create)
-router.patch('/:id', validateAuthentication, update)
-router.delete('/:id', validateAuthentication, remove)
+router.patch('/:commentid', validateAuthentication, update)
+router.delete('/:commentid', validateAuthentication, remove)
 
 export default router

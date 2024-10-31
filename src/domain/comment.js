@@ -7,12 +7,12 @@ export default class Comment {
    * @returns {Comment}
    */
   static fromDb(comment) {
-    return new Comment(
-      comment.id,
-      comment.content,
-      comment.userId,
-      comment.postId
-    )
+    return new Comment({
+      id: comment.id,
+      content: comment.content,
+      userId: comment.userId,
+      postId: comment.postId
+    })
   }
 
   constructor({ id, content, userId, postId }) {
@@ -98,8 +98,8 @@ export default class Comment {
 
       return Comment.fromDb(comment)
     } catch (error) {
-      console.error(`Error finding comment by ${field}:`, error);
-      throw new Error(`Error finding comment by ${field}`);
+      console.error(`Error finding comment by ${field}:`, error)
+      throw new Error(`Error finding comment by ${field}`)
     }
   }
 

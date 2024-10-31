@@ -1,10 +1,11 @@
 import User from '../domain/user.js'
 import { sendDataResponse, sendMessageResponse } from '../utils/responses.js'
 
+/* CREATES A NEW USER */
 export const create = async (req, res) => {
-  const userToCreate = await User.fromJson(req.body)
-
   try {
+    const userToCreate = await User.fromJson(req.body)
+
     const existingUser = await User.findByEmail(userToCreate.email)
 
     if (existingUser) {
@@ -15,10 +16,11 @@ export const create = async (req, res) => {
 
     return sendDataResponse(res, 201, createdUser)
   } catch (error) {
+    console.error('Error creating user:', error)
     return sendMessageResponse(res, 500, 'Unable to create new user')
   }
 }
-
+/* GETS A USER BY ID */
 export const getById = async (req, res) => {
   const id = parseInt(req.params.id)
 
@@ -35,6 +37,7 @@ export const getById = async (req, res) => {
   }
 }
 
+/* GETS ALL USERS */
 export const getAll = async (req, res) => {
   // eslint-disable-next-line camelcase
   const { first_name: firstName } = req.query
@@ -55,13 +58,30 @@ export const getAll = async (req, res) => {
 
   return sendDataResponse(res, 200, { users: formattedUsers })
 }
+/* Updates a user by ID */
 
 export const updateById = async (req, res) => {
-  const { cohort_id: cohortId } = req.body
+  const id = parseInt(req.params.id)
+  const userToUpdate = await User.fromJson(req.body)
 
-  if (!cohortId) {
-    return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+  // Add id, cohortId and role (could be done in the domain)
+  userToUpdate.id = id
+  userToUpdate.cohortId = req.body.cohortId
+  userToUpdate.role = req.body.role
+
+  console.log(userToUpdate)
+
+  try {
+    if (!userToUpdate.cohortId) {
+      return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })
+    }
+    const updatedUser = await userToUpdate.update()
+
+    return sendDataResponse(res, 201, updatedUser)
+  } catch (error) {
+    console.log(error)
+    return sendMessageResponse(res, 500, 'Unable to update user')
   }
-
-  return sendDataResponse(res, 201, { user: { cohort_id: cohortId } })
 }
+
+/* Test Commit statement */
