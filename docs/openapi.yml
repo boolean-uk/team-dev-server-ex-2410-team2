@@ -601,6 +601,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
   /comments:
     post:
       tags:
@@ -707,6 +708,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
 components:
   securitySchemes:
     bearerAuth:
