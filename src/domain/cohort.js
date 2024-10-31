@@ -1,22 +1,6 @@
 import dbClient from '../utils/dbClient.js'
 import User from './user.js'
 
-/**
- * Create a new Cohort in the database
- * @returns {Cohort}
- */
-export async function createCohort(cohortName, startDate, endDate = null) {
-  const createdCohort = await dbClient.cohort.create({
-    data: {
-      cohortName,
-      startDate,
-      endDate
-    }
-  })
-
-  return new Cohort(createdCohort.id)
-}
-
 export class Cohort {
   static fromDb(cohort) {
     return new Cohort(
