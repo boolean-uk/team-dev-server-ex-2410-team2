@@ -20,7 +20,6 @@ export async function validatePostOwnership(req, res, next) {
     return sendDataResponse(res, 500, { content: 'Internal server error' })
   }
 }
-import { sendDataResponse } from '../utils/responses.js'
 
 export async function validatePostContent(req, res, next) {
   const { content } = req.body
