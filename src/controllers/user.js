@@ -69,8 +69,6 @@ export const updateById = async (req, res) => {
   userToUpdate.cohortId = req.body.cohortId
   userToUpdate.role = req.body.role
 
-  console.log(userToUpdate)
-
   try {
     if (!userToUpdate.cohortId) {
       return sendDataResponse(res, 400, { cohort_id: 'Cohort ID is required' })

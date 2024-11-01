@@ -39,3 +39,18 @@ export async function validatePostContent(req, res, next) {
 
   next()
 }
+
+export async function validatePostExists(req, res, next) {
+  const { id: postId } = req.params
+
+  try {
+    const post = await Post.getPostById(Number(postId))
+    if (!post) {
+      return sendDataResponse(res, 404, { content: 'Post not found' })
+    }
+    req.post = post
+    next()
+  } catch (error) {
+    return sendDataResponse(res, 500, { content: 'Internal server error' })
+  }
+}
