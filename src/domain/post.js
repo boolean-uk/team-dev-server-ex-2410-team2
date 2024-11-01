@@ -146,7 +146,8 @@ export default class Post {
         },
         likedBy: {
           include: { profile: true }
-        }
+        },
+        comments: true
       }
     })
     return new Post(
@@ -155,6 +156,7 @@ export default class Post {
       updatedPost.user,
       updatedPost.createdAt,
       updatedPost.updatedAt,
+      updatedPost.comments,
       updatedPost.likedBy
     )
   }
@@ -173,7 +175,8 @@ export default class Post {
         },
         likedBy: {
           include: { profile: true }
-        }
+        },
+        comments: true
       }
     })
     return new Post(
@@ -182,6 +185,7 @@ export default class Post {
       updatedPost.user,
       updatedPost.createdAt,
       updatedPost.updatedAt,
+      updatedPost.comments,
       updatedPost.likedBy
     )
   }
