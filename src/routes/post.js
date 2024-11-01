@@ -20,7 +20,13 @@ const router = Router()
 router.post('/', validateAuthentication, validatePostContent, create)
 router.get('/', validateAuthentication, getAll)
 router.get('/:id', validateAuthentication, getById)
-router.patch('/:id', validateAuthentication, validatePostOwnership, updateById)
+router.patch(
+  '/:id',
+  validateAuthentication,
+  validatePostOwnership,
+  validatePostContent,
+  updateById
+)
 router.delete('/:id', validateAuthentication, validatePostOwnership, deleteById)
 router.post('/:id/like', validateAuthentication, validatePostExists, likePost)
 router.post(
