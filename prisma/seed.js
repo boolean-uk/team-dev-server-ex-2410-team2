@@ -10,6 +10,12 @@ async function seed() {
     new Date('2024-11-01')
   )
 
+  const cohort2 = await createCohort(
+    'Experis 2024',
+    new Date('2024-06-09'),
+    new Date('2024-12-13')
+  )
+
   const student = await createUser(
     'student@test.com',
     cohort.id,
@@ -26,26 +32,19 @@ async function seed() {
     'STUDENT',
     'Testpassword1!'
   )
-
-  function generateRandomBase64String() {
-    return crypto
-      .randomBytes(12)
-      .toString('base64')
-      .replace(/[^a-zA-Z0-9]/g, '')
-  }
-  const student2 = await createUser(
-    'student2@test.com',
+  const jonas = await createUser(
+    'jonas.halvorsen@test.com',
     cohort.id,
-    'John',
-    'Doe',
-    'Hello, this is me',
-    'JohnDoe@github.com',
-    'JohnDoe',
-    '123-456-7890', // mobile
+    'Jonas',
+    'Halvorsen',
+    'Hello, I am Jonas Halvorsen!',
+    'jonas.halvorsen@github.com',
+    'jonas.halvorsen',
+    '123-456-7891', // mobile
     'Software Engineering', // specialism
     new Date('2023-01-01'), // startDate
     new Date('2023-12-31'),
-    generateRandomBase64String(),
+    null,
     'STUDENT',
     'Testpassword1!'
   )
@@ -65,14 +64,129 @@ async function seed() {
     'TEACHER',
     'Testpassword1!'
   )
+  const nigel = await createUser(
+    'nigel.sibbert@test.com',
+    null,
+    'Nigel',
+    'Sibbert',
+    'Hello, I am Nigel Sibbert!',
+    'nigel.sibbert@github.com',
+    'nigel.sibbert',
+    '987-654-3211',
+    'Teaching',
+    new Date('2022-01-01'),
+    new Date('2022-12-31'),
+    null,
+    'TEACHER',
+    'Testpassword1!'
+  )
+  const dave = await createUser(
+    'dave.ames@test.com',
+    null,
+    'Dave',
+    'Ames',
+    'Hello, I am Dave Ames!',
+    'dave.ames@github.com',
+    'dave.ames',
+    '987-654-3212',
+    'Teaching',
+    new Date('2022-01-01'),
+    new Date('2022-12-31'),
+    null,
+    'TEACHER',
+    'Testpassword1!'
+  )
+  const thomas = await createUser(
+    'thomas.wiik@test.com',
+    cohort.id,
+    'Thomas',
+    'Wiik',
+    'Hello, I am Thomas Wiik!',
+    'thomas.wiik@github.com',
+    'thomas.wiik',
+    '123-456-7892', // mobile
+    'Software Engineering', // specialism
+    new Date('2023-01-01'), // startDate
+    new Date('2023-12-31'),
+    null,
+    'STUDENT',
+    'Testpassword1!'
+  )
+  const magnus = await createUser(
+    'magnus.brandsegg@test.com',
+    cohort.id,
+    'Magnus',
+    'Brandsegg',
+    'Hello, I am Magnus Brandsegg!',
+    'magnus.brandsegg@github.com',
+    'magnus.brandsegg',
+    '123-456-7893', // mobile
+    'Software Engineering', // specialism
+    new Date('2023-01-01'), // startDate
+    new Date('2023-12-31'),
+    null,
+    'STUDENT',
+    'Testpassword1!'
+  )
 
-  const post1 = await createPost(student.id, 'My first post!')
-  const post2 = await createPost(teacher.id, 'Hello, students')
-  await createComment(student.id, post1.id, 'Nice post!')
-  await createComment(teacher.id, post1.id, 'Thank you!')
-  await createComment(student.id, post2.id, 'Hello, teacher!')
+const posts = [
+    await createPost(
+      student.id,
+      'This is the first post. It contains some interesting information about our project. We are excited to share more updates soon.'
+    ),
+    await createPost(
+      jonas.id,
+      'Here is another post. This one talks about the progress we have made so far. Stay tuned for more details.'
+    ),
+    await createPost(
+      thomas.id,
+      'In this post, we discuss the challenges we faced and how we overcame them. It has been a learning experience.'
+    ),
+    await createPost(
+      magnus.id,
+      'This post is about the new features we are planning to add. We hope you find them useful and exciting.'
+    ),
+    await createPost(
+      teacher.id,
+      'As a teacher, I am proud of the progress my students have made. This post highlights their achievements.'
+    )
+  ]
 
-  process.exit(0)
+  const comments = [
+    'Great post!',
+    'Very informative.',
+    'Thanks for sharing.',
+    'Looking forward to more updates.'
+  ]
+
+  for (const post of posts) {
+    for (const comment of comments) {
+      await createComment(student.id, post.id, comment)
+      await createComment(jonas.id, post.id, comment)
+      await createComment(thomas.id, post.id, comment)
+      await createComment(magnus.id, post.id, comment)
+    }
+  }
+
+  for (const post of posts) {
+    await likePost(student.id, post.id)
+    await likePost(jonas.id, post.id)
+    await likePost(thomas.id, post.id)
+    await likePost(magnus.id, post.id)
+    await likePost(teacher.id, post.id)
+  }
+}
+
+async function likePost(userId, postId) {
+  await prisma.post.update({
+    where: { id: postId },
+    data: {
+      likedBy: {
+        connect: { id: userId }
+      }
+    }
+  })
+  console.info(`User ${userId} liked Post ${postId}`)
 }
 
 async function createPost(userId, content) {

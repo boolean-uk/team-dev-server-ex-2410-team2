@@ -7,7 +7,8 @@ export default class Post {
     user = null,
     createdAt = null,
     updatedAt = null,
-    comments = []
+    comments = [],
+    likedBy = []
   ) {
     this.id = id
     this.content = content
@@ -15,6 +16,7 @@ export default class Post {
     this.createdAt = createdAt
     this.updatedAt = updatedAt
     this.comments = comments
+    this.likedBy = likedBy
   }
 
   toJSON() {
@@ -41,14 +43,45 @@ export default class Post {
       comments: this.comments.map((comment) => ({
         id: comment.id,
         content: comment.content
+      })),
+      likedBy: this.likedBy.map((user) => ({
+        id: user.id,
+        firstName: user.profile.firstName,
+        lastName: user.profile.lastName,
+        email: user.email
       }))
     }
   }
 
   static async createPost(content, user) {
-    return dbClient.post.create({
-      data: { content: content, userId: user.id }
+    const post = await dbClient.post.create({
+      data: { content: content, userId: user.id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+            role: true,
+            cohortId: true,
+            profile: {
+              select: {
+                firstName: true,
+                lastName: true,
+                bio: true,
+                githubUrl: true,
+                username: true,
+                mobile: true,
+                specialism: true,
+                startDate: true,
+                endDate: true
+              }
+            }
+          }
+        }
+      }
     })
+
+    return post
   }
 
   static async getAllPosts() {
@@ -57,10 +90,13 @@ export default class Post {
         user: {
           include: { profile: true }
         },
+        likedBy: {
+          include: { profile: true }
+        },
         comments: true
       }
     })
-    return posts.map(
+    const returnPosts = posts.map(
       (post) =>
         new Post(
           post.id,
@@ -68,9 +104,14 @@ export default class Post {
           post.user,
           post.createdAt,
           post.updatedAt,
-          post.comments
+          post.comments,
+          post.likedBy
         )
     )
+    const sortedPosts = returnPosts.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    )
+    return sortedPosts
   }
 
   static async getPostById(id) {
@@ -78,6 +119,9 @@ export default class Post {
       where: { id },
       include: {
         user: {
+          include: { profile: true }
+        },
+        likedBy: {
           include: { profile: true }
         },
         comments: true
@@ -90,7 +134,8 @@ export default class Post {
           post.user,
           post.createdAt,
           post.updatedAt,
-          post.comments
+          post.comments,
+          post.likedBy
         )
       : null
   }
@@ -106,5 +151,63 @@ export default class Post {
     return dbClient.post.delete({
       where: { id: id }
     })
+  }
+
+  static async likePost(postId, userId) {
+    const updatedPost = await dbClient.post.update({
+      where: { id: postId },
+      data: {
+        likedBy: {
+          connect: { id: userId }
+        }
+      },
+      include: {
+        user: {
+          include: { profile: true }
+        },
+        likedBy: {
+          include: { profile: true }
+        },
+        comments: true
+      }
+    })
+    return new Post(
+      updatedPost.id,
+      updatedPost.content,
+      updatedPost.user,
+      updatedPost.createdAt,
+      updatedPost.updatedAt,
+      updatedPost.comments,
+      updatedPost.likedBy
+    )
+  }
+
+  static async unlikePost(postId, userId) {
+    const updatedPost = await dbClient.post.update({
+      where: { id: postId },
+      data: {
+        likedBy: {
+          disconnect: { id: userId }
+        }
+      },
+      include: {
+        user: {
+          include: { profile: true }
+        },
+        likedBy: {
+          include: { profile: true }
+        },
+        comments: true
+      }
+    })
+    return new Post(
+      updatedPost.id,
+      updatedPost.content,
+      updatedPost.user,
+      updatedPost.createdAt,
+      updatedPost.updatedAt,
+      updatedPost.comments,
+      updatedPost.likedBy
+    )
   }
 }

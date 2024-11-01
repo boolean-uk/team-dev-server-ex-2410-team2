@@ -11,7 +11,6 @@ export default class User {
    * @returns {User}
    */
   static fromDb(user) {
-    console.log(user)
     return new User(
       user.id,
       user.cohortId,
@@ -107,7 +106,6 @@ export default class User {
   }
 
   toJSON() {
-    console.log(this)
     return {
       user: {
         id: this.id,

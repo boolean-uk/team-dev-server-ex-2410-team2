@@ -87,3 +87,35 @@ export const deleteById = async (req, res) => {
     })
   }
 }
+
+export const likePost = async (req, res) => {
+  const { id: postId } = req.params
+  const userId = req.user.id
+
+  try {
+    const post = await Post.likePost(Number(postId), userId)
+    if (post) {
+      return sendDataResponse(res, 200, { post: post.toJSON() })
+    } else {
+      return sendDataResponse(res, 404, { content: 'Post not found' })
+    }
+  } catch (error) {
+    return sendDataResponse(res, 500, { content: 'Internal server error' })
+  }
+}
+
+export const unlikePost = async (req, res) => {
+  const { id: postId } = req.params
+  const userId = req.user.id
+
+  try {
+    const post = await Post.unlikePost(Number(postId), userId)
+    if (post) {
+      return sendDataResponse(res, 200, { post: post.toJSON() })
+    } else {
+      return sendDataResponse(res, 404, { content: 'Post not found' })
+    }
+  } catch (error) {
+    return sendDataResponse(res, 500, { content: 'Internal server error' })
+  }
+}
