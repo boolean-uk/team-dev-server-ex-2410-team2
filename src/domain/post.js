@@ -7,6 +7,7 @@ export default class Post {
     user = null,
     createdAt = null,
     updatedAt = null,
+    comments = [],
     likedBy = []
   ) {
     this.id = id
@@ -14,6 +15,7 @@ export default class Post {
     this.user = user
     this.createdAt = createdAt
     this.updatedAt = updatedAt
+    this.comments = comments
     this.likedBy = likedBy
   }
 
@@ -38,6 +40,10 @@ export default class Post {
         endDate: this.user.profile.endDate,
         profileImage: this.user.profile.profileImage
       },
+      comments: this.comments.map((comment) => ({
+        id: comment.id,
+        content: comment.content
+      })),
       likedBy: this.likedBy.map((user) => ({
         id: user.id,
         firstName: user.profile.firstName,
@@ -69,7 +75,8 @@ export default class Post {
         },
         likedBy: {
           include: { profile: true }
-        }
+        },
+        comments: true
       }
     })
     return posts.map(
@@ -80,6 +87,7 @@ export default class Post {
           post.user,
           post.createdAt,
           post.updatedAt,
+          post.comments,
           post.likedBy
         )
     )
@@ -94,7 +102,8 @@ export default class Post {
         },
         likedBy: {
           include: { profile: true }
-        }
+        },
+        comments: true
       }
     })
     return post
@@ -104,6 +113,7 @@ export default class Post {
           post.user,
           post.createdAt,
           post.updatedAt,
+          post.comments,
           post.likedBy
         )
       : null

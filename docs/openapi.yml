@@ -1171,11 +1171,11 @@ components:
       properties:
         content:
           type: string
-        userId:
-          type: integer
-      required:
-        - content
-        - userId
+          userId:
+            type: integer
+          required:
+            - content
+            - userId
     Success:
       type: object
       properties:

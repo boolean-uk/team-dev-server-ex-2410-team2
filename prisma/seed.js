@@ -42,8 +42,11 @@ async function seed() {
     'Testpassword1!'
   )
 
-  await createPost(student.id, 'My first post!')
-  await createPost(teacher.id, 'Hello, students')
+  const post1 = await createPost(student.id, 'My first post!')
+  const post2 = await createPost(teacher.id, 'Hello, students')
+  await createComment(student.id, post1.id, 'Nice post!')
+  await createComment(teacher.id, post1.id, 'Thank you!')
+  await createComment(student.id, post2.id, 'Hello, teacher!')
 
   await likePost(student.id, 2)
   await likePost(teacher.id, 1)
@@ -77,6 +80,24 @@ async function createPost(userId, content) {
   console.info('Post created', post)
 
   return post
+}
+
+async function createComment(userId, postId, content) {
+  const comment = await prisma.comment.create({
+    data: {
+      userId,
+      postId,
+      content
+    },
+    include: {
+      user: true,
+      post: true
+    }
+  })
+
+  console.info('Comment created', comment)
+
+  return comment
 }
 
 async function createCohort(cohortName, startDate, endDate) {
