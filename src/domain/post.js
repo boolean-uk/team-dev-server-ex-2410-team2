@@ -54,17 +54,34 @@ export default class Post {
   }
 
   static async createPost(content, user) {
-    return dbClient.post.create({
+    const post = await dbClient.post.create({
       data: { content: content, userId: user.id },
       include: {
         user: {
-          include: { profile: true }
-        },
-        likedBy: {
-          include: { profile: true }
+          select: {
+            id: true,
+            email: true,
+            role: true,
+            cohortId: true,
+            profile: {
+              select: {
+                firstName: true,
+                lastName: true,
+                bio: true,
+                githubUrl: true,
+                username: true,
+                mobile: true,
+                specialism: true,
+                startDate: true,
+                endDate: true
+              }
+            }
+          }
         }
       }
     })
+
+    return post
   }
 
   static async getAllPosts() {
