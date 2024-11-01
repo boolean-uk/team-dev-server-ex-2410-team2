@@ -9,7 +9,14 @@ export default class Cohort {
       cohort.startDate,
       cohort.endDate,
       cohort.students
-        ? cohort.students.map((student) => User.fromDb(student))
+        ? cohort.students.map((student) =>
+            User.fromDb({
+              ...student,
+              profileImage: student.profile
+                ? student.profile.profileImage
+                : null
+            })
+          )
         : []
     )
   }
@@ -74,7 +81,11 @@ export default class Cohort {
   static async getAllCohorts() {
     const cohorts = await dbClient.cohort.findMany({
       include: {
-        students: true
+        students: {
+          include: {
+            profile: true
+          }
+        }
       }
     })
     return cohorts.map((cohort) => Cohort.fromDb(cohort))
@@ -84,7 +95,11 @@ export default class Cohort {
     const cohort = await dbClient.cohort.findUnique({
       where: { id },
       include: {
-        students: true
+        students: {
+          include: {
+            profile: true
+          }
+        }
       }
     })
     return cohort ? Cohort.fromDb(cohort) : null

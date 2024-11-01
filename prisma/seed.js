@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
+import crypto from 'crypto'
 const prisma = new PrismaClient()
 
 async function seed() {
@@ -22,6 +23,29 @@ async function seed() {
     new Date('2023-01-01'), // startDate
     new Date('2023-12-31'),
     null,
+    'STUDENT',
+    'Testpassword1!'
+  )
+
+  function generateRandomBase64String() {
+    return crypto
+      .randomBytes(12)
+      .toString('base64')
+      .replace(/[^a-zA-Z0-9]/g, '')
+  }
+  const student2 = await createUser(
+    'student2@test.com',
+    cohort.id,
+    'John',
+    'Doe',
+    'Hello, this is me',
+    'JohnDoe@github.com',
+    'JohnDoe',
+    '123-456-7890', // mobile
+    'Software Engineering', // specialism
+    new Date('2023-01-01'), // startDate
+    new Date('2023-12-31'),
+    generateRandomBase64String(),
     'STUDENT',
     'Testpassword1!'
   )
