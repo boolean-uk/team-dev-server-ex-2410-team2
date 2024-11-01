@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client'
-import { imageBase64Strings } from './imageBase64Strings'
 import bcrypt from 'bcrypt'
 const prisma = new PrismaClient()
 
@@ -44,7 +43,7 @@ async function seed() {
     'Software Engineering', // specialism
     new Date('2023-01-01'), // startDate
     new Date('2023-12-31'),
-    imageBase64Strings.jonas,
+    null,
     'STUDENT',
     'Testpassword1!'
   )
