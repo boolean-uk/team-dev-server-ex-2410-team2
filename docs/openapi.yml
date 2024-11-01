@@ -364,6 +364,78 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /posts/{id}/like:
+    post:
+      tags:
+        - post
+      summary: Like a post
+      description: Allows a user to like a post.
+      operationId: likePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the post to like
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post liked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /posts/{id}/unlike:
+    post:
+      tags:
+        - post
+      summary: Unlike a post
+      description: Allows a user to unlike a post.
+      operationId: unlikePost
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the post to unlike
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post unliked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Post not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /logs:
     post:
       tags:
@@ -729,6 +801,10 @@ components:
                   type: integer
                 content:
                   type: string
+                likedBy:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/User'
 
     Cohort:
       type: object
@@ -925,6 +1001,10 @@ components:
                         format: date-time
                       profileImage:
                         type: string
+                  likedBy:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
 
     UpdatePost:
       type: object
