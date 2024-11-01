@@ -79,7 +79,7 @@ export default class Post {
         comments: true
       }
     })
-    return posts.map(
+    const returnPosts = posts.map(
       (post) =>
         new Post(
           post.id,
@@ -91,6 +91,10 @@ export default class Post {
           post.likedBy
         )
     )
+    const sortedPosts = returnPosts.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    )
+    return sortedPosts
   }
 
   static async getPostById(id) {
