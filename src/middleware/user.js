@@ -5,7 +5,7 @@ export async function validateUser(req, res, next) {
     if (
       email.length < 7 ||
       email.indexOf('@') <= 0 ||
-      !email.slice(-4, -1).includes('.') ||
+      email.slice(-4) !== '.com' ||
       (email.match(/@/g) || []).length > 1 ||
       email.charAt(email.length - 5) === '@'
     ) {
