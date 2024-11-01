@@ -4,12 +4,15 @@ import {
   getAll,
   updateById,
   getById,
-  deleteById
+  deleteById,
+  likePost,
+  unlikePost
 } from '../controllers/post.js'
 import { validateAuthentication } from '../middleware/auth.js'
 import {
   validatePostOwnership,
-  validatePostContent
+  validatePostContent,
+  validatePostExists
 } from '../middleware/post.js'
 
 const router = Router()
@@ -25,5 +28,12 @@ router.patch(
   updateById
 )
 router.delete('/:id', validateAuthentication, validatePostOwnership, deleteById)
+router.post('/:id/like', validateAuthentication, validatePostExists, likePost)
+router.post(
+  '/:id/unlike',
+  validateAuthentication,
+  validatePostExists,
+  unlikePost
+)
 
 export default router

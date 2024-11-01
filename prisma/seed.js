@@ -48,7 +48,22 @@ async function seed() {
   await createComment(teacher.id, post1.id, 'Thank you!')
   await createComment(student.id, post2.id, 'Hello, teacher!')
 
+  await likePost(student.id, 2)
+  await likePost(teacher.id, 1)
+
   process.exit(0)
+}
+
+async function likePost(userId, postId) {
+  await prisma.post.update({
+    where: { id: postId },
+    data: {
+      likedBy: {
+        connect: { id: userId }
+      }
+    }
+  })
+  console.info(`User ${userId} liked Post ${postId}`)
 }
 
 async function createPost(userId, content) {
